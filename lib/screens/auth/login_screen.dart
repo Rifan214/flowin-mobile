@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../core/constants/app_colors.dart';
 import '../main_navigation_screen.dart';
+import 'register_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -294,33 +295,42 @@ class _LoginScreenState
 
               const SizedBox(height: 40),
 
-              RichText(
-                text: const TextSpan(
-                  style: TextStyle(
-                    color:
-                        Colors.black87,
-                    fontSize: 16,
-                  ),
-                  children: [
-                    TextSpan(
-                      text:
-                          "Don't have an account? ",
+              Center(
+                child: GestureDetector(
+                    onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                        builder: (_) =>
+                            const RegisterScreen(),
+                        ),
+                    );
+                    },
+                    child: RichText(
+                    text: const TextSpan(
+                        style: TextStyle(
+                        color: Colors.black87,
+                        fontSize: 16,
+                        ),
+                        children: [
+                        TextSpan(
+                            text:
+                                "Don't have an account? ",
+                        ),
+                        TextSpan(
+                            text: "Register",
+                            style: TextStyle(
+                            color:
+                                AppColors.primary,
+                            fontWeight:
+                                FontWeight.bold,
+                            ),
+                        ),
+                        ],
                     ),
-                    TextSpan(
-                      text:
-                          "Register",
-                      style:
-                          TextStyle(
-                        color:
-                            AppColors.primary,
-                        fontWeight:
-                            FontWeight
-                                .bold,
-                      ),
                     ),
-                  ],
                 ),
-              ),
+                ),
 
               const SizedBox(height: 40),
 
@@ -335,13 +345,6 @@ class _LoginScreenState
               ),
 
               const SizedBox(height: 20),
-
-              const Text(
-                '© 2024 Flowin Systems. All rights reserved.',
-                style: TextStyle(
-                  color: Colors.grey,
-                ),
-              ),
 
               const Text(
                 '© 2024 Flowin Systems. All rights reserved.',
