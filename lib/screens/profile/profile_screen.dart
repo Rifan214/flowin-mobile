@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-import '../../core/constants/app_colors.dart';
 import '../../widgets/flowin_header.dart';
 import '../../widgets/profile_header_card.dart';
 import '../../widgets/settings_section.dart';
 import '../../widgets/settings_tile.dart';
+import '../subscription/subscription_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -15,8 +15,7 @@ class ProfileScreen extends StatelessWidget {
       child: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
         child: Column(
-          crossAxisAlignment:
-              CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const FlowinHeader(),
 
@@ -26,8 +25,7 @@ class ProfileScreen extends StatelessWidget {
               'Account Settings',
               style: TextStyle(
                 fontSize: 24,
-                fontWeight:
-                    FontWeight.bold,
+                fontWeight: FontWeight.bold,
               ),
             ),
 
@@ -48,26 +46,34 @@ class ProfileScreen extends StatelessWidget {
 
             SettingsSection(
               title: 'ACCOUNT',
-              children: const [
-                SettingsTile(
+              children: [
+                const SettingsTile(
                   icon: Icons.person_outline,
-                  title:
-                      'Personal Information',
+                  title: 'Personal Information',
                 ),
-                Divider(height: 1),
-                SettingsTile(
+
+                const Divider(height: 1),
+
+                const SettingsTile(
                   icon: Icons.credit_card,
-                  title:
-                      'Payment Methods',
+                  title: 'Payment Methods',
                 ),
-                Divider(height: 1),
+
+                const Divider(height: 1),
+
                 SettingsTile(
-                  icon:
-                      Icons.water_drop_outlined,
-                  title:
-                      'Subscription Plan',
-                  subtitle:
-                      'Premium Hydration (Active)',
+                  icon: Icons.water_drop_outlined,
+                  title: 'Subscription Plan',
+                  subtitle: 'Premium Hydration (Active)',
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) =>
+                            const SubscriptionScreen(),
+                      ),
+                    );
+                  },
                 ),
               ],
             ),
@@ -76,30 +82,29 @@ class ProfileScreen extends StatelessWidget {
               title: 'PREFERENCES',
               children: [
                 const SettingsTile(
-                  icon:
-                      Icons.notifications_none,
-                  title:
-                      'Push Notifications',
-                  subtitle:
-                      'Delivery updates & alerts',
+                  icon: Icons.notifications_none,
+                  title: 'Push Notifications',
+                  subtitle: 'Delivery updates & alerts',
                   trailing: Switch(
                     value: true,
                     onChanged: null,
                   ),
                 ),
+
                 const Divider(height: 1),
+
                 const SettingsTile(
                   icon: Icons.mail_outline,
-                  title:
-                      'Email Newsletters',
-                  subtitle:
-                      'Weekly health tips',
+                  title: 'Email Newsletters',
+                  subtitle: 'Weekly health tips',
                   trailing: Switch(
                     value: false,
                     onChanged: null,
                   ),
                 ),
+
                 const Divider(height: 1),
+
                 const SettingsTile(
                   icon: Icons.language,
                   title: 'Language',
@@ -108,23 +113,25 @@ class ProfileScreen extends StatelessWidget {
               ],
             ),
 
-            SettingsSection(
+            const SettingsSection(
               title: 'SECURITY & LEGAL',
-              children: const [
+              children: [
                 SettingsTile(
                   icon: Icons.lock_outline,
-                  title:
-                      'Privacy & Security',
+                  title: 'Privacy & Security',
                 ),
+
                 Divider(height: 1),
+
                 SettingsTile(
                   icon: Icons.info_outline,
-                  title:
-                      'About Application',
+                  title: 'About Application',
                   trailingText: 'v2.4.1',
                 ),
               ],
             ),
+
+            const SizedBox(height: 24),
 
             SizedBox(
               width: double.infinity,
@@ -155,4 +162,4 @@ class ProfileScreen extends StatelessWidget {
       ),
     );
   }
-}
+} 
