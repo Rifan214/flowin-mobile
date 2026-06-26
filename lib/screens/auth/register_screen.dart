@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../core/constants/app_colors.dart';
 import 'login_screen.dart';
+import 'register_success_screen.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -259,7 +260,13 @@ class _RegisterScreenState
               height: 56,
               child: FilledButton(
                 onPressed: () {
-                  Navigator.pop(context);
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) =>
+                          const RegisterSuccessScreen(),
+                    ),
+                  );
                 },
                 child: const Text(
                   'Register',
