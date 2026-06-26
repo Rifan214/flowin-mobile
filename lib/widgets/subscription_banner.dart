@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../core/constants/app_text_styles.dart';
+import '../screens/subscription_screen.dart';
 
 class SubscriptionBanner extends StatelessWidget {
   const SubscriptionBanner({super.key});
@@ -14,20 +15,13 @@ class SubscriptionBanner extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(24),
         gradient: const LinearGradient(
-          colors: [
-            Color(0xFF0D6EFD),
-            Color(0xFF2E86FF),
-          ],
+          colors: [Color(0xFF0D6EFD), Color(0xFF2E86FF)],
         ),
       ),
       child: Column(
-        crossAxisAlignment:
-            CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'Monthly\nSubscription',
-            style: AppTextStyles.bannerTitle,
-          ),
+          const Text('Monthly\nSubscription', style: AppTextStyles.bannerTitle),
           const SizedBox(height: 10),
           const Text(
             'Save up to 20% on weekly deliveries.',
@@ -35,10 +29,13 @@ class SubscriptionBanner extends StatelessWidget {
           ),
           const Spacer(),
           FilledButton(
-            style: FilledButton.styleFrom(
-              backgroundColor: Colors.white,
-            ),
-            onPressed: () {},
+            style: FilledButton.styleFrom(backgroundColor: Colors.white),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const SubscriptionScreen()),
+              );
+            },
             child: const Text(
               'Explore Plans',
               style: TextStyle(
