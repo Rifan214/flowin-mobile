@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'review_success_screen.dart';
 import '../main_navigation_screen.dart';
 
 class RatingReviewScreen extends StatefulWidget {
@@ -179,15 +180,12 @@ class _RatingReviewScreenState
                 height: 56,
                 child: FilledButton(
                   onPressed: () {
-                    Navigator
-                        .pushAndRemoveUntil(
+                    Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
                         builder: (_) =>
-                            const MainNavigationScreen(),
+                            const ReviewSuccessScreen(),
                       ),
-                      (route) =>
-                          false,
                     );
                   },
                   child: const Text(
