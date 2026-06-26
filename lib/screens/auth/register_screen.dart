@@ -8,12 +8,10 @@ class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
 
   @override
-  State<RegisterScreen> createState() =>
-      _RegisterScreenState();
+  State<RegisterScreen> createState() => _RegisterScreenState();
 }
 
-class _RegisterScreenState
-    extends State<RegisterScreen> {
+class _RegisterScreenState extends State<RegisterScreen> {
   bool obscurePassword = true;
 
   @override
@@ -33,10 +31,7 @@ class _RegisterScreenState
           ),
         ),
         leading: IconButton(
-          icon: const Icon(
-            Icons.arrow_back,
-            color: AppColors.primary,
-          ),
+          icon: const Icon(Icons.arrow_back, color: AppColors.primary),
           onPressed: () {
             Navigator.pop(context);
           },
@@ -45,14 +40,12 @@ class _RegisterScreenState
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
         child: Column(
-          crossAxisAlignment:
-              CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             ClipRRect(
-              borderRadius:
-                  BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(20),
               child: Image.asset(
-                'assets/images/login_water.jpg',
+                'assets/images/login_water.png',
                 width: double.infinity,
                 height: 190,
                 fit: BoxFit.cover,
@@ -63,10 +56,7 @@ class _RegisterScreenState
 
             const Text(
               'Register',
-              style: TextStyle(
-                fontSize: 34,
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(fontSize: 34, fontWeight: FontWeight.bold),
             ),
 
             const SizedBox(height: 10),
@@ -84,25 +74,17 @@ class _RegisterScreenState
 
             const Text(
               'Username',
-              style: TextStyle(
-                fontWeight: FontWeight.w600,
-              ),
+              style: TextStyle(fontWeight: FontWeight.w600),
             ),
 
             const SizedBox(height: 8),
 
             TextField(
               decoration: InputDecoration(
-                hintText:
-                    'Choose a unique username',
-                prefixIcon: const Icon(
-                  Icons.person_outline,
-                ),
+                hintText: 'Choose a unique username',
+                prefixIcon: const Icon(Icons.person_outline),
                 border: OutlineInputBorder(
-                  borderRadius:
-                      BorderRadius.circular(
-                    14,
-                  ),
+                  borderRadius: BorderRadius.circular(14),
                 ),
               ),
             ),
@@ -111,9 +93,7 @@ class _RegisterScreenState
 
             const Text(
               'Password',
-              style: TextStyle(
-                fontWeight: FontWeight.w600,
-              ),
+              style: TextStyle(fontWeight: FontWeight.w600),
             ),
 
             const SizedBox(height: 8),
@@ -121,60 +101,39 @@ class _RegisterScreenState
             TextField(
               obscureText: obscurePassword,
               decoration: InputDecoration(
-                hintText:
-                    'Create a strong password',
-                prefixIcon: const Icon(
-                  Icons.lock_outline,
-                ),
+                hintText: 'Create a strong password',
+                prefixIcon: const Icon(Icons.lock_outline),
                 suffixIcon: IconButton(
                   icon: Icon(
                     obscurePassword
-                        ? Icons
-                            .visibility_outlined
-                        : Icons
-                            .visibility_off_outlined,
+                        ? Icons.visibility_outlined
+                        : Icons.visibility_off_outlined,
                   ),
                   onPressed: () {
                     setState(() {
-                      obscurePassword =
-                          !obscurePassword;
+                      obscurePassword = !obscurePassword;
                     });
                   },
                 ),
                 border: OutlineInputBorder(
-                  borderRadius:
-                      BorderRadius.circular(
-                    14,
-                  ),
+                  borderRadius: BorderRadius.circular(14),
                 ),
               ),
             ),
 
             const SizedBox(height: 20),
 
-            const Text(
-              'Phone',
-              style: TextStyle(
-                fontWeight: FontWeight.w600,
-              ),
-            ),
+            const Text('Phone', style: TextStyle(fontWeight: FontWeight.w600)),
 
             const SizedBox(height: 8),
 
             TextField(
-              keyboardType:
-                  TextInputType.phone,
+              keyboardType: TextInputType.phone,
               decoration: InputDecoration(
-                hintText:
-                    '+1 (555) 000-0000',
-                prefixIcon: const Icon(
-                  Icons.phone_outlined,
-                ),
+                hintText: '+1 (555) 000-0000',
+                prefixIcon: const Icon(Icons.phone_outlined),
                 border: OutlineInputBorder(
-                  borderRadius:
-                      BorderRadius.circular(
-                    14,
-                  ),
+                  borderRadius: BorderRadius.circular(14),
                 ),
               ),
             ),
@@ -183,9 +142,7 @@ class _RegisterScreenState
 
             const Text(
               'Address',
-              style: TextStyle(
-                fontWeight: FontWeight.w600,
-              ),
+              style: TextStyle(fontWeight: FontWeight.w600),
             ),
 
             const SizedBox(height: 8),
@@ -193,22 +150,13 @@ class _RegisterScreenState
             TextField(
               maxLines: 4,
               decoration: InputDecoration(
-                hintText:
-                    'Enter your full delivery address',
+                hintText: 'Enter your full delivery address',
                 prefixIcon: const Padding(
-                  padding:
-                      EdgeInsets.only(
-                    bottom: 70,
-                  ),
-                  child: Icon(
-                    Icons.location_on_outlined,
-                  ),
+                  padding: EdgeInsets.only(bottom: 70),
+                  child: Icon(Icons.location_on_outlined),
                 ),
                 border: OutlineInputBorder(
-                  borderRadius:
-                      BorderRadius.circular(
-                    14,
-                  ),
+                  borderRadius: BorderRadius.circular(14),
                 ),
               ),
             ),
@@ -217,38 +165,19 @@ class _RegisterScreenState
 
             RichText(
               text: const TextSpan(
-                style: TextStyle(
-                  color: Colors.black54,
-                  fontSize: 14,
-                ),
+                style: TextStyle(color: Colors.black54, fontSize: 14),
                 children: [
+                  TextSpan(text: 'By registering, you agree to our '),
                   TextSpan(
-                    text:
-                        'By registering, you agree to our ',
+                    text: 'Terms of Service',
+                    style: TextStyle(color: AppColors.primary),
                   ),
+                  TextSpan(text: ' and '),
                   TextSpan(
-                    text:
-                        'Terms of Service',
-                    style: TextStyle(
-                      color:
-                          AppColors.primary,
-                    ),
+                    text: 'Privacy Policy',
+                    style: TextStyle(color: AppColors.primary),
                   ),
-                  TextSpan(
-                    text:
-                        ' and ',
-                  ),
-                  TextSpan(
-                    text:
-                        'Privacy Policy',
-                    style: TextStyle(
-                      color:
-                          AppColors.primary,
-                    ),
-                  ),
-                  TextSpan(
-                    text: '.',
-                  ),
+                  TextSpan(text: '.'),
                 ],
               ),
             ),
@@ -263,17 +192,11 @@ class _RegisterScreenState
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
-                      builder: (_) =>
-                          const RegisterSuccessScreen(),
+                      builder: (_) => const RegisterSuccessScreen(),
                     ),
                   );
                 },
-                child: const Text(
-                  'Register',
-                  style: TextStyle(
-                    fontSize: 18,
-                  ),
-                ),
+                child: const Text('Register', style: TextStyle(fontSize: 18)),
               ),
             ),
 
@@ -286,26 +209,14 @@ class _RegisterScreenState
                 },
                 child: RichText(
                   text: const TextSpan(
-                    style: TextStyle(
-                      color:
-                          Colors.black87,
-                      fontSize: 16,
-                    ),
+                    style: TextStyle(color: Colors.black87, fontSize: 16),
                     children: [
+                      TextSpan(text: 'Already have an account? '),
                       TextSpan(
-                        text:
-                            'Already have an account? ',
-                      ),
-                      TextSpan(
-                        text:
-                            'Sign In',
-                        style:
-                            TextStyle(
-                          color:
-                              AppColors.primary,
-                          fontWeight:
-                              FontWeight
-                                  .bold,
+                        text: 'Sign In',
+                        style: TextStyle(
+                          color: AppColors.primary,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                     ],
