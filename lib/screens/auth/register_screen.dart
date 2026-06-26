@@ -52,7 +52,7 @@ class _RegisterScreenState
               borderRadius:
                   BorderRadius.circular(20),
               child: Image.asset(
-                'assets/images/login_water.jpg',
+                'assets/images/login_water.png',
                 width: double.infinity,
                 height: 190,
                 fit: BoxFit.cover,

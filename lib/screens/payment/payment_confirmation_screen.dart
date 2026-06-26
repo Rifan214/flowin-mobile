@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../main_navigation_screen.dart';
+import '../orders/cancel_order_screen.dart';
 import '../tracking/live_delivery_tracking_screen.dart';
 import '../../core/constants/app_colors.dart';
 
@@ -243,6 +244,38 @@ class PaymentConfirmationScreen
                           },
                           child: const Text(
                             'Back to Home',
+                          ),
+                        ),
+                      ),
+
+                      const SizedBox(height: 20),
+
+                      SizedBox(
+                        width: double.infinity,
+                        height: 56,
+                        child: FilledButton(
+                          style: FilledButton.styleFrom(
+                            backgroundColor: Colors.red,
+                            foregroundColor: Colors.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                          ),
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) =>
+                                    const CancelOrderScreen(),
+                              ),
+                            );
+                          },
+                          child: const Text(
+                            'Cancel Order',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
                         ),
                       ),
