@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'personal_information_screen.dart';
 
 import '../../core/constants/app_colors.dart';
 import '../../widgets/flowin_header.dart';
@@ -48,29 +49,38 @@ class ProfileScreen extends StatelessWidget {
 
             SettingsSection(
               title: 'ACCOUNT',
-              children: const [
+              children: [
                 SettingsTile(
                   icon: Icons.person_outline,
-                  title:
-                      'Personal Information',
+                  title: 'Personal Information',
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) =>
+                            const PersonalInformationScreen(),
+                      ),
+                    );
+                  },
                 ),
-                Divider(height: 1),
-                SettingsTile(
+
+                const Divider(height: 1),
+
+                const SettingsTile(
                   icon: Icons.credit_card,
-                  title:
-                      'Payment Methods',
+                  title: 'Payment Methods',
                 ),
-                Divider(height: 1),
-                SettingsTile(
-                  icon:
-                      Icons.water_drop_outlined,
-                  title:
-                      'Subscription Plan',
-                  subtitle:
-                      'Premium Hydration (Active)',
+
+                const Divider(height: 1),
+
+                const SettingsTile(
+                  icon: Icons.water_drop_outlined,
+                  title: 'Subscription Plan',
+                  subtitle: 'Premium Hydration (Active)',
                 ),
               ],
             ),
+    
 
             SettingsSection(
               title: 'PREFERENCES',
@@ -153,6 +163,6 @@ class ProfileScreen extends StatelessWidget {
           ],
         ),
       ),
-    );
+    ); 
   }
 }
