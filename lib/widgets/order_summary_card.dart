@@ -2,21 +2,30 @@ import 'package:flutter/material.dart';
 
 import '../core/constants/app_colors.dart';
 
-class OrderSummaryCard
-    extends StatelessWidget {
+class OrderSummaryCard extends StatelessWidget {
+  final String itemName;
+  final double itemPrice;
+  final double deliveryFee;
+  final double serviceTax;
+
   const OrderSummaryCard({
     super.key,
+    this.itemName = '3× 5 Gallon Spring Water',
+    this.itemPrice = 24.00,
+    this.deliveryFee = 2.50,
+    this.serviceTax = 1.45,
   });
+
+  double get total =>
+      itemPrice + deliveryFee + serviceTax;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding:
-          const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius:
-            BorderRadius.circular(18),
+        borderRadius: BorderRadius.circular(18),
         border: Border.all(
           color: AppColors.border,
         ),
@@ -24,24 +33,26 @@ class OrderSummaryCard
       child: Column(
         children: [
           _row(
-            '3× 5 Gallon Spring Water',
-            '\$24.00',
+            itemName,
+            '\$${itemPrice.toStringAsFixed(2)}',
           ),
+
           _row(
             'Delivery Fee',
-            '\$2.50',
+            '\$${deliveryFee.toStringAsFixed(2)}',
           ),
+
           _row(
             'Service Tax',
-            '\$1.45',
+            '\$${serviceTax.toStringAsFixed(2)}',
           ),
 
           const Divider(),
 
           _row(
             'Total Amount',
-            '\$27.95',
-            total: true,
+            '\$${total.toStringAsFixed(2)}',
+            totalRow: true,
           ),
         ],
       ),
@@ -51,27 +62,37 @@ class OrderSummaryCard
   Widget _row(
     String title,
     String value, {
-    bool total = false,
+    bool totalRow = false,
   }) {
     return Padding(
-      padding:
-          const EdgeInsets.symmetric(
+      padding: const EdgeInsets.symmetric(
         vertical: 8,
       ),
       child: Row(
+        crossAxisAlignment:
+            CrossAxisAlignment.start,
         children: [
-          Text(title),
-
-          const Spacer(),
+          Expanded(
+            child: Text(
+              title,
+              style: TextStyle(
+                fontSize:
+                    totalRow ? 18 : 16,
+                fontWeight: totalRow
+                    ? FontWeight.bold
+                    : FontWeight.w500,
+              ),
+            ),
+          ),
 
           Text(
             value,
             style: TextStyle(
               fontSize:
-                  total ? 32 : 18,
+                  totalRow ? 28 : 18,
               fontWeight:
                   FontWeight.bold,
-              color: total
+              color: totalRow
                   ? AppColors.primary
                   : Colors.black,
             ),
