@@ -48,9 +48,6 @@ class ProfileScreen extends StatelessWidget {
             SettingsSection(
               title: 'ACCOUNT',
               children: [
-                const SettingsTile(
-                  icon: Icons.person_outline,
-                  title: 'Personal Information',
                 SettingsTile(
                   icon: Icons.person_outline,
                   title: 'Personal Information',
@@ -87,10 +84,6 @@ class ProfileScreen extends StatelessWidget {
                       ),
                     );
                   },
-                const SettingsTile(
-                  icon: Icons.water_drop_outlined,
-                  title: 'Subscription Plan',
-                  subtitle: 'Premium Hydration (Active)',
                 ),
               ],
             ),
