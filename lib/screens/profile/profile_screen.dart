@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'personal_information_screen.dart';
 
 import '../../widgets/flowin_header.dart';
 import '../../widgets/profile_header_card.dart';
@@ -50,6 +51,18 @@ class ProfileScreen extends StatelessWidget {
                 const SettingsTile(
                   icon: Icons.person_outline,
                   title: 'Personal Information',
+                SettingsTile(
+                  icon: Icons.person_outline,
+                  title: 'Personal Information',
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) =>
+                            const PersonalInformationScreen(),
+                      ),
+                    );
+                  },
                 ),
 
                 const Divider(height: 1),
@@ -74,9 +87,14 @@ class ProfileScreen extends StatelessWidget {
                       ),
                     );
                   },
+                const SettingsTile(
+                  icon: Icons.water_drop_outlined,
+                  title: 'Subscription Plan',
+                  subtitle: 'Premium Hydration (Active)',
                 ),
               ],
             ),
+    
 
             SettingsSection(
               title: 'PREFERENCES',
@@ -160,6 +178,6 @@ class ProfileScreen extends StatelessWidget {
           ],
         ),
       ),
-    );
+    ); 
   }
 } 
