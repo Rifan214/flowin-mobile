@@ -101,7 +101,7 @@ class HomeScreen extends StatelessWidget {
                   crossAxisCount: 2,
                   crossAxisSpacing: 14,
                   mainAxisSpacing: 14,
-                  mainAxisExtent: 290,
+                  mainAxisExtent: 320,
                 ),
                 itemBuilder: (context, index) {
                   return ProductCard(
