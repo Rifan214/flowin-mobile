@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'personal_information_screen.dart';
+import 'payment_methods_screen.dart';
 
 import '../../widgets/flowin_header.dart';
 import '../../widgets/profile_header_card.dart';
@@ -64,12 +65,18 @@ class ProfileScreen extends StatelessWidget {
 
                 const Divider(height: 1),
 
-                const SettingsTile(
+                SettingsTile(
                   icon: Icons.credit_card,
                   title: 'Payment Methods',
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => const PaymentMethodsScreen(),
+                      ),
+                    );
+                  },
                 ),
-
-                const Divider(height: 1),
 
                 SettingsTile(
                   icon: Icons.water_drop_outlined,
