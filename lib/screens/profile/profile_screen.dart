@@ -6,6 +6,7 @@ import '../../widgets/flowin_header.dart';
 import '../../widgets/profile_header_card.dart';
 import '../../widgets/settings_section.dart';
 import '../../widgets/settings_tile.dart';
+import '../auth/login_screen.dart';
 import '../subscription/subscription_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -155,7 +156,41 @@ class ProfileScreen extends StatelessWidget {
               width: double.infinity,
               height: 56,
               child: OutlinedButton.icon(
-                onPressed: () {},
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (dialogContext) {
+                      return AlertDialog(
+                        title: const Text('Log Out'),
+                        content: const Text(
+                          'Are you sure you want to log out from Flowin?',
+                        ),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pop(dialogContext);
+                            },
+                            child: const Text('No'),
+                          ),
+                          FilledButton(
+                            onPressed: () {
+                              Navigator.pop(dialogContext);
+
+                              Navigator.pushAndRemoveUntil(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => const LoginScreen(),
+                                ),
+                                (route) => false,
+                              );
+                            },
+                            child: const Text('Yes'),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                },
                 icon: const Icon(
                   Icons.logout,
                   color: Colors.red,
