@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 
-import '../detail/product_detail_screen.dart';
 import '../../core/constants/app_text_styles.dart';
 import '../../data/dummy_products.dart';
 import '../../widgets/filter_chip.dart';
 import '../../widgets/product_card.dart';
 import '../../widgets/search_box.dart';
 import '../../widgets/subscription_banner.dart';
+import '../detail/product_detail_screen.dart';
+import '../notification/notification_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -23,8 +24,7 @@ class HomeScreen extends StatelessWidget {
             100,
           ),
           child: Column(
-            crossAxisAlignment:
-                CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
                 children: [
@@ -32,15 +32,26 @@ class HomeScreen extends StatelessWidget {
                     onPressed: () {},
                     icon: const Icon(Icons.menu),
                   ),
+
                   const Spacer(),
+
                   Text(
                     'Flowin',
-                    style:
-                        AppTextStyles.appBarTitle,
+                    style: AppTextStyles.appBarTitle,
                   ),
+
                   const Spacer(),
+
                   IconButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) =>
+                              const NotificationScreen(),
+                        ),
+                      );
+                    },
                     icon: const Icon(
                       Icons.notifications_none,
                     ),
@@ -59,8 +70,7 @@ class HomeScreen extends StatelessWidget {
 
               Text(
                 'Ready for your daily hydration?',
-                style:
-                    AppTextStyles.greetingSubtitle,
+                style: AppTextStyles.greetingSubtitle,
               ),
 
               const SizedBox(height: 24),
@@ -105,8 +115,7 @@ class HomeScreen extends StatelessWidget {
                 ),
                 itemBuilder: (context, index) {
                   return ProductCard(
-                    product:
-                        dummyProducts[index],
+                    product: dummyProducts[index],
                     onTap: () {
                       Navigator.push(
                         context,
