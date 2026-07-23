@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../core/constants/app_colors.dart';
 import '../../data/dummy_notifications.dart';
 import '../../widgets/notification_card.dart';
+import '../../widgets/flowin_header.dart';
 
 class NotificationScreen extends StatelessWidget {
   const NotificationScreen({super.key});
@@ -20,33 +21,18 @@ class NotificationScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: const Color(0xffF6F8FC),
 
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        centerTitle: true,
-        leading: IconButton(
-          onPressed: () => Navigator.pop(context),
-          icon: const Icon(
-            Icons.arrow_back_ios_new,
-            color: AppColors.primary,
-          ),
-        ),
-        title: const Text(
-          "Flowin",
-          style: TextStyle(
-            color: AppColors.primary,
-            fontWeight: FontWeight.bold,
-            fontSize: 28,
-          ),
-        ),
-      ),
-
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              const FlowinHeader(
+                leftIcon: Icon(Icons.arrow_back_ios_new),
+                rightIcon: SizedBox(width: 48),
+              ),
+
+              const SizedBox(height: 24),
 
               Row(
                 children: [

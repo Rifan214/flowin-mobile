@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import '../../core/constants/app_text_styles.dart';
 import '../../data/dummy_products.dart';
 import '../../widgets/filter_chip.dart';
+import '../../widgets/flowin_header.dart';
 import '../../widgets/product_card.dart';
 import '../../widgets/search_box.dart';
 import '../../widgets/subscription_banner.dart';
 import '../detail/product_detail_screen.dart';
-import '../notification/notification_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -26,38 +26,7 @@ class HomeScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                children: [
-                  IconButton(
-                    onPressed: () {},
-                    icon: const Icon(Icons.menu),
-                  ),
-
-                  const Spacer(),
-
-                  Text(
-                    'Flowin',
-                    style: AppTextStyles.appBarTitle,
-                  ),
-
-                  const Spacer(),
-
-                  IconButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) =>
-                              const NotificationScreen(),
-                        ),
-                      );
-                    },
-                    icon: const Icon(
-                      Icons.notifications_none,
-                    ),
-                  ),
-                ],
-              ),
+              const FlowinHeader(),
 
               const SizedBox(height: 20),
 

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../core/constants/app_colors.dart';
+import '../../widgets/flowin_header.dart';
 
 class PaymentMethodsScreen extends StatelessWidget {
   const PaymentMethodsScreen({super.key});
@@ -9,42 +10,6 @@ class PaymentMethodsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xffF6F8FC),
-
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        surfaceTintColor: Colors.white,
-        elevation: 0,
-        centerTitle: true,
-
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: const Icon(
-            Icons.arrow_back,
-            color: Colors.black,
-          ),
-        ),
-
-        title: const Text(
-          "Payment Methods",
-          style: TextStyle(
-            color: AppColors.primary,
-            fontSize: 22,
-            fontWeight: FontWeight.w700,
-          ),
-        ),
-
-        actions: [
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(
-              Icons.notifications_none,
-              color: Colors.black,
-            ),
-          ),
-        ],
-      ),
 
       body: SafeArea(
         child: SingleChildScrollView(
@@ -56,6 +21,12 @@ class PaymentMethodsScreen extends StatelessWidget {
           ),
           child: Column(
             children: [
+              const FlowinHeader(
+                title: 'Payment Methods',
+                leftIcon: Icon(Icons.arrow_back),
+              ),
+
+              const SizedBox(height: 24),
 
               //==========================
               // SAVED CARDS

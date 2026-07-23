@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../core/constants/app_colors.dart';
 import 'login_screen.dart';
 import 'register_success_screen.dart';
+import '../../widgets/flowin_header.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -18,30 +19,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF5F6FB),
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        centerTitle: true,
-        title: const Text(
-          'Flowin',
-          style: TextStyle(
-            color: AppColors.primary,
-            fontWeight: FontWeight.bold,
-            fontSize: 24,
-          ),
-        ),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppColors.primary),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const FlowinHeader(
+                leftIcon: Icon(Icons.arrow_back),
+                rightIcon: SizedBox(width: 48),
+              ),
+
+              const SizedBox(height: 24),
             ClipRRect(
               borderRadius: BorderRadius.circular(20),
               child: Image.asset(
@@ -229,6 +218,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           ],
         ),
       ),
+    ),
     );
   }
 }

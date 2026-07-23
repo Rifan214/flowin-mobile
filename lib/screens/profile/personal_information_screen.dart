@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../core/constants/app_colors.dart';
+import '../../widgets/flowin_header.dart';
 
 class PersonalInformationScreen extends StatefulWidget {
   const PersonalInformationScreen({
@@ -48,35 +49,10 @@ class _PersonalInformationScreenState
 
           child: Column(
             children: [
-                            Row(
-                children: [
-                  IconButton(
-                    onPressed: () {
-                      Navigator.pop(
-                          context);
-                    },
-                    icon: const Icon(
-                      Icons.arrow_back_ios,
-                    ),
-                  ),
-
-                  const Expanded(
-                    child: Text(
-                      'Personal Information',
-                      textAlign:
-                          TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 22,
-                        fontWeight:
-                            FontWeight.bold,
-                      ),
-                    ),
-                  ),
-
-                  const SizedBox(
-                    width: 48,
-                  ),
-                ],
+              const FlowinHeader(
+                title: 'Personal Info',
+                leftIcon: Icon(Icons.arrow_back_ios),
+                rightIcon: SizedBox(width: 48),
               ),
 
               const SizedBox(height: 28),

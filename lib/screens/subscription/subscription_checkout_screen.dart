@@ -6,6 +6,7 @@ import '../../widgets/address_card.dart';
 import '../../widgets/order_summary_card.dart';
 import '../../widgets/payment_method_card.dart';
 import 'subscription_payment_screen.dart';
+import '../../widgets/flowin_header.dart';
 
 class SubscriptionCheckoutScreen extends StatelessWidget {
   final SubscriptionPlan plan;
@@ -64,41 +65,10 @@ class SubscriptionCheckoutScreen extends StatelessWidget {
                 CrossAxisAlignment.start,
             children: [
 
-              Row(
-                children: [
-
-                  IconButton(
-                    onPressed: () {
-                      Navigator.pop(
-                          context);
-                    },
-                    icon: const Icon(
-                      Icons.arrow_back,
-                    ),
-                  ),
-
-                  const Spacer(),
-
-                  const Text(
-                    "Checkout",
-                    style: TextStyle(
-                      fontSize: 28,
-                      fontWeight:
-                          FontWeight.bold,
-                      color:
-                          AppColors.primary,
-                    ),
-                  ),
-
-                  const Spacer(),
-
-                  IconButton(
-                    onPressed: () {},
-                    icon: const Icon(
-                      Icons.help_outline,
-                    ),
-                  ),
-                ],
+              const FlowinHeader(
+                title: 'Checkout',
+                leftIcon: Icon(Icons.arrow_back),
+                rightIcon: Icon(Icons.help_outline),
               ),
 
               const SizedBox(height: 24),

@@ -4,6 +4,7 @@ import '../../core/constants/app_colors.dart';
 import '../../data/dummy_subscription.dart';
 import '../../widgets/subscription_card.dart';
 import 'subscription_checkout_screen.dart';
+import '../../widgets/flowin_header.dart';
 
 class SubscriptionScreen extends StatefulWidget {
   const SubscriptionScreen({super.key});
@@ -21,31 +22,16 @@ class _SubscriptionScreenState
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xffF6F8FC),
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        centerTitle: true,
-        title: const Text(
-          'Flowin',
-          style: TextStyle(
-            color: AppColors.primary,
-            fontWeight: FontWeight.bold,
-            fontSize: 28,
-          ),
-        ),
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: const Icon(
-            Icons.arrow_back_ios_new,
-            color: AppColors.primary,
-          ),
-        ),
-      ),
       body: SafeArea(
         child: Column(
           children: [
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+              child: FlowinHeader(
+                leftIcon: Icon(Icons.arrow_back_ios_new),
+                rightIcon: SizedBox(width: 48),
+              ),
+            ),
             Expanded(
               child: SingleChildScrollView(
                 padding: const EdgeInsets.fromLTRB(

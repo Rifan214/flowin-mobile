@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../main_navigation_screen.dart';
 import '../../core/constants/app_colors.dart';
 import '../../models/product.dart';
+import '../../widgets/flowin_header.dart';
 
 class ProductDetailScreen extends StatelessWidget {
   final Product product;
@@ -33,37 +34,8 @@ class ProductDetailScreen extends StatelessWidget {
                 horizontal: 12,
                 vertical: 8,
               ),
-              child: Row(
-                children: [
-                  IconButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    icon: const Icon(
-                      Icons.arrow_back,
-                    ),
-                  ),
-
-                  const Spacer(),
-
-                  const Text(
-                    'Flowin',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.primary,
-                    ),
-                  ),
-
-                  const Spacer(),
-
-                  IconButton(
-                    onPressed: () {},
-                    icon: const Icon(
-                      Icons.notifications_none,
-                    ),
-                  ),
-                ],
+              child: const FlowinHeader(
+                leftIcon: Icon(Icons.arrow_back),
               ),
             ),
 

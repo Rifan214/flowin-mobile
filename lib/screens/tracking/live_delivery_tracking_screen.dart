@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import '../review/rating_review_screen.dart';
 import '../../core/constants/app_colors.dart';
+import '../../widgets/flowin_header.dart';
 
 class LiveDeliveryTrackingScreen
     extends StatefulWidget {
@@ -59,37 +60,11 @@ class _LiveDeliveryTrackingScreenState
                 horizontal: 16,
                 vertical: 12,
               ),
-              child: Row(
-                children: [
-                  IconButton.filled(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    icon: const Icon(
-                      Icons.arrow_back,
-                    ),
-                  ),
-
-                  const Spacer(),
-
-                  const Text(
-                    'Live Tracking',
-                    style: TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
-
-                  const Spacer(),
-
-                  IconButton.filled(
-                    onPressed: () {},
-                    icon: const Icon(
-                      Icons.my_location,
-                    ),
-                  ),
-                ],
+              child: const FlowinHeader(
+                title: 'Live Tracking',
+                textColor: Colors.white,
+                leftIcon: Icon(Icons.arrow_back),
+                rightIcon: Icon(Icons.my_location),
               ),
             ),
           ),
