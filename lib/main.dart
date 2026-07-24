@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 
 import 'core/theme/app_theme.dart';
-import 'screens/main_navigation_screen.dart';
 import 'screens/onboarding/onboarding_screen.dart';
-import 'screens/profile/payment_methods_screen.dart';
+import 'screens/support/help_support_screen.dart';
 
 void main() {
   runApp(const FlowinApp());
@@ -19,6 +18,7 @@ class FlowinApp extends StatelessWidget {
       title: 'Flowin',
       theme: AppTheme.lightTheme,
       home: const OnboardingScreen(),
+      routes: {'/help-support': (_) => const HelpSupportScreen()},
     );
   }
 }

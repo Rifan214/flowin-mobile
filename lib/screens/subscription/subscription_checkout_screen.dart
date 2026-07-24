@@ -10,10 +10,7 @@ import 'subscription_payment_screen.dart';
 class SubscriptionCheckoutScreen extends StatelessWidget {
   final SubscriptionPlan plan;
 
-  const SubscriptionCheckoutScreen({
-    super.key,
-    required this.plan,
-  });
+  const SubscriptionCheckoutScreen({super.key, required this.plan});
 
   @override
   Widget build(BuildContext context) {
@@ -28,28 +25,20 @@ class SubscriptionCheckoutScreen extends StatelessWidget {
             style: FilledButton.styleFrom(
               backgroundColor: AppColors.primary,
               shape: RoundedRectangleBorder(
-                borderRadius:
-                    BorderRadius.circular(18),
+                borderRadius: BorderRadius.circular(18),
               ),
             ),
             onPressed: () {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (_) =>
-                      SubscriptionPaymentScreen(
-                    plan: plan,
-                  ),
+                  builder: (_) => SubscriptionPaymentScreen(plan: plan),
                 ),
               );
             },
             child: const Text(
               'Confirm Payment',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight:
-                    FontWeight.w600,
-              ),
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
             ),
           ),
         ),
@@ -57,24 +46,17 @@ class SubscriptionCheckoutScreen extends StatelessWidget {
 
       body: SafeArea(
         child: SingleChildScrollView(
-          padding:
-              const EdgeInsets.all(20),
+          padding: const EdgeInsets.all(20),
           child: Column(
-            crossAxisAlignment:
-                CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-
               Row(
                 children: [
-
                   IconButton(
                     onPressed: () {
-                      Navigator.pop(
-                          context);
+                      Navigator.pop(context);
                     },
-                    icon: const Icon(
-                      Icons.arrow_back,
-                    ),
+                    icon: const Icon(Icons.arrow_back),
                   ),
 
                   const Spacer(),
@@ -83,10 +65,8 @@ class SubscriptionCheckoutScreen extends StatelessWidget {
                     "Checkout",
                     style: TextStyle(
                       fontSize: 28,
-                      fontWeight:
-                          FontWeight.bold,
-                      color:
-                          AppColors.primary,
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.primary,
                     ),
                   ),
 
@@ -94,9 +74,7 @@ class SubscriptionCheckoutScreen extends StatelessWidget {
 
                   IconButton(
                     onPressed: () {},
-                    icon: const Icon(
-                      Icons.help_outline,
-                    ),
+                    icon: const Icon(Icons.help_outline),
                   ),
                 ],
               ),
@@ -105,24 +83,14 @@ class SubscriptionCheckoutScreen extends StatelessWidget {
 
               Row(
                 children: [
-
                   const Text(
                     "Delivery Address",
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight:
-                          FontWeight.bold,
-                    ),
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
 
                   const Spacer(),
 
-                  TextButton(
-                    onPressed: () {},
-                    child: const Text(
-                      "Edit",
-                    ),
-                  ),
+                  TextButton(onPressed: () {}, child: const Text("Edit")),
                 ],
               ),
 
@@ -134,84 +102,53 @@ class SubscriptionCheckoutScreen extends StatelessWidget {
 
               const Text(
                 "Subscription Plan",
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight:
-                      FontWeight.bold,
-                ),
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
 
               const SizedBox(height: 14),
 
               Container(
-                padding:
-                    const EdgeInsets.all(18),
+                padding: const EdgeInsets.all(18),
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius:
-                      BorderRadius.circular(
-                          18),
-                  border: Border.all(
-                    color:
-                        AppColors.border,
-                  ),
+                  borderRadius: BorderRadius.circular(18),
+                  border: Border.all(color: AppColors.border),
                 ),
                 child: Row(
                   children: [
-
                     Container(
                       width: 62,
                       height: 62,
-                      decoration:
-                          BoxDecoration(
-                        color: AppColors
-                            .primary
-                            .withValues(alpha: .1),
-                        borderRadius:
-                            BorderRadius
-                                .circular(
-                                    14),
+                      decoration: BoxDecoration(
+                        color: AppColors.primary.withValues(alpha: .1),
+                        borderRadius: BorderRadius.circular(14),
                       ),
                       child: const Icon(
                         Icons.water_drop,
-                        color:
-                            AppColors.primary,
+                        color: AppColors.primary,
                         size: 32,
                       ),
                     ),
 
-                    const SizedBox(
-                        width: 18),
+                    const SizedBox(width: 18),
 
                     Expanded(
                       child: Column(
-                        crossAxisAlignment:
-                            CrossAxisAlignment
-                                .start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-
                           Text(
                             plan.title,
-                            style:
-                                const TextStyle(
-                              fontSize:
-                                  22,
-                              fontWeight:
-                                  FontWeight
-                                      .bold,
+                            style: const TextStyle(
+                              fontSize: 22,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
 
-                          const SizedBox(
-                              height: 6),
+                          const SizedBox(height: 6),
 
                           Text(
                             plan.description,
-                            style:
-                                const TextStyle(
-                              color: Colors
-                                  .grey,
-                            ),
+                            style: const TextStyle(color: Colors.grey),
                           ),
                         ],
                       ),
@@ -219,14 +156,10 @@ class SubscriptionCheckoutScreen extends StatelessWidget {
 
                     Text(
                       "\$${plan.price}",
-                      style:
-                          const TextStyle(
+                      style: const TextStyle(
                         fontSize: 28,
-                        fontWeight:
-                            FontWeight
-                                .bold,
-                        color:
-                            AppColors.primary,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.primary,
                       ),
                     ),
                   ],
@@ -237,36 +170,27 @@ class SubscriptionCheckoutScreen extends StatelessWidget {
 
               const Text(
                 "Payment Method",
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight:
-                      FontWeight.bold,
-                ),
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
 
               const SizedBox(height: 14),
 
               const PaymentMethodCard(
                 title: "•••• 4242",
-                subtitle:
-                    "Expires 12/26",
+                subtitle: "Expires 12/26",
                 selected: true,
               ),
 
               const PaymentMethodCard(
-                title:
-                    "Digital Wallet",
-                subtitle:
-                    "Apple Pay / Google Pay",
+                title: "Digital Wallet",
+                subtitle: "Apple Pay / Google Pay",
                 selected: false,
               ),
 
               Center(
                 child: TextButton(
                   onPressed: () {},
-                  child: const Text(
-                    "+ Add New Method",
-                  ),
+                  child: const Text("+ Add New Method"),
                 ),
               ),
 
@@ -274,45 +198,30 @@ class SubscriptionCheckoutScreen extends StatelessWidget {
 
               const Text(
                 "Order Summary",
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight:
-                      FontWeight.bold,
-                ),
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
 
               const SizedBox(height: 14),
 
               OrderSummaryCard(
-                itemName:
-                    "${plan.title} Subscription",
-                itemPrice:
-                    plan.price.toDouble(),
+                itemName: "${plan.title} Subscription",
+                itemPrice: plan.price.toDouble(),
               ),
 
               const SizedBox(height: 24),
 
               const Center(
                 child: Row(
-                  mainAxisAlignment:
-                      MainAxisAlignment
-                          .center,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(
-                      Icons.lock_outline,
-                      size: 18,
-                    ),
+                    Icon(Icons.lock_outline, size: 18),
                     SizedBox(width: 8),
-                    Text(
-                      "END-TO-END ENCRYPTED PAYMENT",
-                    ),
+                    Text("END-TO-END ENCRYPTED PAYMENT"),
                   ],
                 ),
               ),
 
-              const SizedBox(
-                height: 120,
-              ),
+              const SizedBox(height: 120),
             ],
           ),
         ),
