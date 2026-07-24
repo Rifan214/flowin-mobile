@@ -7,6 +7,7 @@ import '../../widgets/profile_header_card.dart';
 import '../../widgets/settings_section.dart';
 import '../../widgets/settings_tile.dart';
 import '../auth/login_screen.dart';
+import '../support/help_support_screen.dart';
 import '../subscription/subscription_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -26,19 +27,14 @@ class ProfileScreen extends StatelessWidget {
 
             const Text(
               'Account Settings',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
 
             const SizedBox(height: 8),
 
             const Text(
               'Manage your profile, preferences, and security settings.',
-              style: TextStyle(
-                color: Colors.grey,
-              ),
+              style: TextStyle(color: Colors.grey),
             ),
 
             const SizedBox(height: 24),
@@ -57,8 +53,7 @@ class ProfileScreen extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (_) =>
-                            const PersonalInformationScreen(),
+                        builder: (_) => const PersonalInformationScreen(),
                       ),
                     );
                   },
@@ -87,15 +82,13 @@ class ProfileScreen extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (_) =>
-                            const SubscriptionScreen(),
+                        builder: (_) => const SubscriptionScreen(),
                       ),
                     );
                   },
                 ),
               ],
             ),
-    
 
             SettingsSection(
               title: 'PREFERENCES',
@@ -104,10 +97,7 @@ class ProfileScreen extends StatelessWidget {
                   icon: Icons.notifications_none,
                   title: 'Push Notifications',
                   subtitle: 'Delivery updates & alerts',
-                  trailing: Switch(
-                    value: true,
-                    onChanged: null,
-                  ),
+                  trailing: Switch(value: true, onChanged: null),
                 ),
 
                 const Divider(height: 1),
@@ -116,10 +106,7 @@ class ProfileScreen extends StatelessWidget {
                   icon: Icons.mail_outline,
                   title: 'Email Newsletters',
                   subtitle: 'Weekly health tips',
-                  trailing: Switch(
-                    value: false,
-                    onChanged: null,
-                  ),
+                  trailing: Switch(value: false, onChanged: null),
                 ),
 
                 const Divider(height: 1),
@@ -146,6 +133,25 @@ class ProfileScreen extends StatelessWidget {
                   icon: Icons.info_outline,
                   title: 'About Application',
                   trailingText: 'v2.4.1',
+                ),
+              ],
+            ),
+
+            SettingsSection(
+              title: 'SUPPORT',
+              children: [
+                SettingsTile(
+                  icon: Icons.help_outline_rounded,
+                  title: 'Help & Support',
+                  subtitle: 'FAQ and contact support',
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => const HelpSupportScreen(),
+                      ),
+                    );
+                  },
                 ),
               ],
             ),
@@ -191,20 +197,13 @@ class ProfileScreen extends StatelessWidget {
                     },
                   );
                 },
-                icon: const Icon(
-                  Icons.logout,
-                  color: Colors.red,
-                ),
+                icon: const Icon(Icons.logout, color: Colors.red),
                 label: const Text(
                   'Log Out',
-                  style: TextStyle(
-                    color: Colors.red,
-                  ),
+                  style: TextStyle(color: Colors.red),
                 ),
                 style: OutlinedButton.styleFrom(
-                  side: const BorderSide(
-                    color: Colors.red,
-                  ),
+                  side: const BorderSide(color: Colors.red),
                 ),
               ),
             ),
@@ -213,6 +212,6 @@ class ProfileScreen extends StatelessWidget {
           ],
         ),
       ),
-    ); 
+    );
   }
-} 
+}
