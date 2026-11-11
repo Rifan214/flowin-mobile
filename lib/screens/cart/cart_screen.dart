@@ -8,10 +8,10 @@ import '../../core/design_system/flowin_spacing.dart';
 import '../../core/design_system/flowin_typography.dart';
 import '../../shared/widgets/animated_price_text.dart';
 import '../../shared/widgets/flowin_button.dart';
-import '../../shared/widgets/flowin_text_field.dart';
 import '../../shared/widgets/flowin_toast.dart';
 import '../../state/flowin_app_state.dart';
 import '../../widgets/cart_item_card.dart';
+import '../../widgets/delivery_address_editor_sheet.dart';
 import '../../widgets/flowin_header.dart';
 import '../checkout/checkout_screen.dart';
 import '../main_navigation_screen.dart';
@@ -19,73 +19,8 @@ import '../main_navigation_screen.dart';
 class CartScreen extends StatelessWidget {
   const CartScreen({super.key});
 
-  void _openEditAddressSheet(BuildContext context, FlowinAppState appState) {
-    final labelCtrl = TextEditingController(text: appState.deliveryTitle);
-    final addrCtrl = TextEditingController(text: appState.deliveryAddress);
-
-    showModalBottomSheet<void>(
-      context: context,
-      isScrollControlled: true,
-      builder: (ctx) => Padding(
-        padding: EdgeInsets.fromLTRB(
-          22,
-          18,
-          22,
-          MediaQuery.viewInsetsOf(ctx).bottom + 24,
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Center(
-              child: Container(
-                width: 40,
-                height: 4,
-                decoration: BoxDecoration(
-                  color: FlowinColors.border,
-                  borderRadius: FlowinRadii.fullPill,
-                ),
-              ),
-            ),
-            const SizedBox(height: 16),
-            Text('Delivery Address', style: FlowinTypography.headlineMedium),
-            const SizedBox(height: 14),
-            FlowinTextField(
-              label: 'Location Label',
-              controller: labelCtrl,
-              prefixIcon: Icons.bookmark_outline_rounded,
-            ),
-            const SizedBox(height: 12),
-            FlowinTextField(
-              label: 'Full Street & Unit',
-              controller: addrCtrl,
-              prefixIcon: Icons.location_on_outlined,
-              maxLines: 2,
-            ),
-            const SizedBox(height: 18),
-            FlowinButton(
-              label: 'Save Delivery Address',
-              onPressed: () {
-                appState.updateDeliveryAddress(
-                  title: labelCtrl.text,
-                  address: addrCtrl.text,
-                );
-                Navigator.pop(ctx);
-                FlowinToast.show(
-                  context,
-                  title: 'Address Updated',
-                  message: appState.deliveryAddress,
-                  type: FlowinToastType.success,
-                );
-              },
-            ),
-          ],
-        ),
-      ),
-    ).whenComplete(() {
-      labelCtrl.dispose();
-      addrCtrl.dispose();
-    });
+  void _openEditAddressSheet(BuildContext context) {
+    DeliveryAddressEditorSheet.show(context);
   }
 
   @override
@@ -221,7 +156,7 @@ class CartScreen extends StatelessWidget {
                               ),
                               TextButton(
                                 onPressed: () =>
-                                    _openEditAddressSheet(context, appState),
+                                    _openEditAddressSheet(context),
                                 child: Text(
                                   'Edit',
                                   style: FlowinTypography.titleMedium.copyWith(

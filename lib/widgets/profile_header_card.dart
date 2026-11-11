@@ -4,6 +4,7 @@ import '../core/animations/liquid_wave_painter.dart';
 import '../core/design_system/flowin_colors.dart';
 import '../core/design_system/flowin_spacing.dart';
 import '../core/design_system/flowin_typography.dart';
+import '../shared/widgets/flowin_user_avatar.dart';
 import '../state/flowin_app_state.dart';
 
 class ProfileHeaderCard extends StatelessWidget {
@@ -44,14 +45,9 @@ class ProfileHeaderCard extends StatelessWidget {
                     width: 2,
                   ),
                 ),
-                child: const CircleAvatar(
-                  radius: 28,
-                  backgroundColor: FlowinColors.cyanMist,
-                  child: Icon(
-                    Icons.person_rounded,
-                    size: 30,
-                    color: FlowinColors.primary,
-                  ),
+                child: FlowinUserAvatar(
+                  photoBytes: appState?.profilePhotoBytes,
+                  size: 56,
                 ),
               ),
               const SizedBox(width: 14),

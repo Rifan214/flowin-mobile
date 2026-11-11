@@ -5,10 +5,10 @@ import '../../core/animations/staggered_reveal.dart';
 import '../../core/design_system/flowin_colors.dart';
 import '../../core/design_system/flowin_typography.dart';
 import '../../shared/widgets/flowin_button.dart';
-import '../../shared/widgets/flowin_text_field.dart';
-import '../../shared/widgets/flowin_toast.dart';
 import '../../state/flowin_app_state.dart';
+import '../../widgets/add_payment_method_sheet.dart';
 import '../../widgets/address_card.dart';
+import '../../widgets/delivery_address_editor_sheet.dart';
 import '../../widgets/flowin_header.dart';
 import '../../widgets/order_summary_card.dart';
 import '../../widgets/payment_method_card.dart';
@@ -17,123 +17,12 @@ import '../payment/payment_confirmation_screen.dart';
 class CheckoutScreen extends StatelessWidget {
   const CheckoutScreen({super.key});
 
-  void _openEditAddress(BuildContext context, FlowinAppState appState) {
-    final titleCtrl = TextEditingController(text: appState.deliveryTitle);
-    final addrCtrl = TextEditingController(text: appState.deliveryAddress);
-
-    showModalBottomSheet<void>(
-      context: context,
-      isScrollControlled: true,
-      builder: (ctx) => Padding(
-        padding: EdgeInsets.fromLTRB(
-          22,
-          18,
-          22,
-          MediaQuery.viewInsetsOf(ctx).bottom + 24,
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Update Drop Location', style: FlowinTypography.headlineMedium),
-            const SizedBox(height: 14),
-            FlowinTextField(
-              label: 'Address Label',
-              controller: titleCtrl,
-              prefixIcon: Icons.bookmark_outline_rounded,
-            ),
-            const SizedBox(height: 12),
-            FlowinTextField(
-              label: 'Complete Street Address',
-              controller: addrCtrl,
-              prefixIcon: Icons.location_on_outlined,
-              maxLines: 2,
-            ),
-            const SizedBox(height: 18),
-            FlowinButton(
-              label: 'Save Address',
-              onPressed: () {
-                appState.updateDeliveryAddress(
-                  title: titleCtrl.text,
-                  address: addrCtrl.text,
-                );
-                Navigator.pop(ctx);
-                FlowinToast.show(
-                  context,
-                  title: 'Delivery Address Updated',
-                  type: FlowinToastType.success,
-                );
-              },
-            ),
-          ],
-        ),
-      ),
-    ).whenComplete(() {
-      titleCtrl.dispose();
-      addrCtrl.dispose();
-    });
+  void _openEditAddress(BuildContext context) {
+    DeliveryAddressEditorSheet.show(context);
   }
 
-  void _openAddPaymentMethod(BuildContext context, FlowinAppState appState) {
-    final labelCtrl = TextEditingController();
-    final subCtrl = TextEditingController();
-
-    showModalBottomSheet<void>(
-      context: context,
-      isScrollControlled: true,
-      builder: (ctx) => Padding(
-        padding: EdgeInsets.fromLTRB(
-          22,
-          18,
-          22,
-          MediaQuery.viewInsetsOf(ctx).bottom + 24,
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Add Payment Method', style: FlowinTypography.headlineMedium),
-            const SizedBox(height: 14),
-            FlowinTextField(
-              label: 'Card or E-Wallet Name',
-              hint: 'e.g. Mastercard •••• 8821',
-              controller: labelCtrl,
-              prefixIcon: Icons.credit_card_rounded,
-            ),
-            const SizedBox(height: 12),
-            FlowinTextField(
-              label: 'Details / Expiry',
-              hint: 'e.g. Expires 11/29',
-              controller: subCtrl,
-              prefixIcon: Icons.info_outline_rounded,
-            ),
-            const SizedBox(height: 18),
-            FlowinButton(
-              label: 'Save & Select',
-              onPressed: () {
-                if (labelCtrl.text.trim().isEmpty) return;
-                appState.addPaymentMethod(
-                  labelCtrl.text.trim(),
-                  subCtrl.text.trim().isEmpty
-                      ? 'Verified payment account'
-                      : subCtrl.text.trim(),
-                );
-                Navigator.pop(ctx);
-                FlowinToast.show(
-                  context,
-                  title: 'Payment Method Added',
-                  message: labelCtrl.text.trim(),
-                  type: FlowinToastType.success,
-                );
-              },
-            ),
-          ],
-        ),
-      ),
-    ).whenComplete(() {
-      labelCtrl.dispose();
-      subCtrl.dispose();
-    });
+  void _openAddPaymentMethod(BuildContext context) {
+    AddPaymentMethodSheet.show(context, submitLabel: 'Save & Select');
   }
 
   @override
@@ -171,8 +60,7 @@ class CheckoutScreen extends StatelessWidget {
                           AddressCard(
                             title: appState.deliveryTitle,
                             address: appState.deliveryAddress,
-                            onEditPressed: () =>
-                                _openEditAddress(context, appState),
+                            onEditPressed: () => _openEditAddress(context),
                           ),
                         ],
                       ),
@@ -198,7 +86,7 @@ class CheckoutScreen extends StatelessWidget {
                               const SizedBox(width: 8),
                               TextButton.icon(
                                 onPressed: () =>
-                                    _openAddPaymentMethod(context, appState),
+                                    _openAddPaymentMethod(context),
                                 icon: const Icon(Icons.add_rounded, size: 17),
                                 label: const Text('Add New'),
                               ),

@@ -6,10 +6,10 @@ import '../../core/design_system/flowin_spacing.dart';
 import '../../core/design_system/flowin_typography.dart';
 import '../../models/subscription_plan.dart';
 import '../../shared/widgets/flowin_button.dart';
-import '../../shared/widgets/flowin_text_field.dart';
 import '../../shared/widgets/flowin_toast.dart';
 import '../../state/flowin_app_state.dart';
 import '../../widgets/address_card.dart';
+import '../../widgets/delivery_address_editor_sheet.dart';
 import '../../widgets/flowin_header.dart';
 import '../../widgets/payment_method_card.dart';
 import 'subscription_payment_screen.dart';
@@ -35,51 +35,8 @@ class _SubscriptionCheckoutScreenState
     'Evening (17:00 - 20:00)',
   ];
 
-  void _editAddress(FlowinAppState appState) {
-    final titleCtrl = TextEditingController(text: appState.deliveryTitle);
-    final addrCtrl = TextEditingController(text: appState.deliveryAddress);
-
-    showModalBottomSheet<void>(
-      context: context,
-      isScrollControlled: true,
-      builder: (ctx) => Padding(
-        padding: EdgeInsets.fromLTRB(
-          22,
-          18,
-          22,
-          MediaQuery.viewInsetsOf(ctx).bottom + 24,
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Delivery Address', style: FlowinTypography.headlineMedium),
-            const SizedBox(height: 12),
-            FlowinTextField(label: 'Label', controller: titleCtrl),
-            const SizedBox(height: 12),
-            FlowinTextField(
-              label: 'Street Address',
-              controller: addrCtrl,
-              maxLines: 2,
-            ),
-            const SizedBox(height: 18),
-            FlowinButton(
-              label: 'Update Address',
-              onPressed: () {
-                appState.updateDeliveryAddress(
-                  title: titleCtrl.text,
-                  address: addrCtrl.text,
-                );
-                Navigator.pop(ctx);
-              },
-            ),
-          ],
-        ),
-      ),
-    ).whenComplete(() {
-      titleCtrl.dispose();
-      addrCtrl.dispose();
-    });
+  void _editAddress() {
+    DeliveryAddressEditorSheet.show(context);
   }
 
   @override
@@ -157,7 +114,7 @@ class _SubscriptionCheckoutScreenState
                     AddressCard(
                       title: appState.deliveryTitle,
                       address: appState.deliveryAddress,
-                      onEditPressed: () => _editAddress(appState),
+                      onEditPressed: _editAddress,
                     ),
                     const SizedBox(height: 20),
 

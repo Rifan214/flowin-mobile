@@ -98,6 +98,7 @@ class _FlowinTextFieldState extends State<FlowinTextField> {
             style: FlowinTypography.bodyLarge.copyWith(fontSize: 14.5),
             decoration: InputDecoration(
               hintText: widget.hint,
+              errorMaxLines: 2,
               fillColor: _hasFocus ? FlowinColors.surface : FlowinColors.surfaceSubtle,
               prefixIcon: widget.prefixIcon != null
                   ? Icon(

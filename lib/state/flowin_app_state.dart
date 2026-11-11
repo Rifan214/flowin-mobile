@@ -1,4 +1,8 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
+
+import '../core/services/profile_photo_picker.dart';
 
 import '../data/dummy_cart.dart';
 import '../data/dummy_notifications.dart';
@@ -71,9 +75,12 @@ enum ProductSortOption { recommended, priceLowToHigh, priceHighToLow, volume }
 
 /// Reactive frontend store initializing from Flowin's seed dummy datasets.
 class FlowinAppState extends ChangeNotifier {
-  FlowinAppState() {
+  FlowinAppState({ProfilePhotoPicker? photoPicker})
+      : _photoPicker = photoPicker ?? ImagePickerProfilePhotoPicker() {
     _initializeFromSeedData();
   }
+
+  final ProfilePhotoPicker _photoPicker;
 
   void _initializeFromSeedData() {
     _catalog = List<Product>.from(dummyProducts);
@@ -424,6 +431,7 @@ class FlowinAppState extends ChangeNotifier {
   String _userPhone = '+62 812 8400 2299';
   String _deliveryTitle = 'Home • Evergreen Residence';
   String _deliveryAddress = '742 Evergreen Terrace, Apt 4B, South Jakarta';
+  Uint8List? _profilePhotoBytes;
   bool _notificationsEnabled = true;
   bool _autoRefillReminder = true;
 
@@ -432,6 +440,9 @@ class FlowinAppState extends ChangeNotifier {
   String get userPhone => _userPhone;
   String get deliveryTitle => _deliveryTitle;
   String get deliveryAddress => _deliveryAddress;
+  Uint8List? get profilePhotoBytes => _profilePhotoBytes;
+  bool get hasProfilePhoto =>
+      _profilePhotoBytes != null && _profilePhotoBytes!.isNotEmpty;
   bool get notificationsEnabled => _notificationsEnabled;
   bool get autoRefillReminder => _autoRefillReminder;
 
@@ -444,6 +455,46 @@ class FlowinAppState extends ChangeNotifier {
     _userEmail = email.trim().isEmpty ? _userEmail : email.trim();
     _userPhone = phone.trim().isEmpty ? _userPhone : phone.trim();
     notifyListeners();
+  }
+
+  /// Validates and stores in-memory profile photo bytes across Android & Web.
+  /// Returns a validation error message when [bytes] are invalid/unsupported.
+  String? updateProfilePhoto(Uint8List? bytes, {String? fileName}) {
+    if (bytes == null) {
+      clearProfilePhoto();
+      return null;
+    }
+    final error = validateProfilePhotoBytes(bytes, fileName: fileName);
+    if (error != null) {
+      return error;
+    }
+    _profilePhotoBytes = Uint8List.fromList(bytes);
+    notifyListeners();
+    return null;
+  }
+
+  void clearProfilePhoto() {
+    if (_profilePhotoBytes == null) return;
+    _profilePhotoBytes = null;
+    notifyListeners();
+  }
+
+  /// Launches the configured gallery picker, validates the result, and updates
+  /// in-memory state only when a valid image is selected.
+  Future<PhotoPickResult> pickProfilePhoto() async {
+    final result = await _photoPicker.pickFromGallery();
+    if (result is PhotoPickSuccess) {
+      final error = validateProfilePhotoBytes(
+        result.bytes,
+        fileName: result.fileName,
+      );
+      if (error != null) {
+        return PhotoPickFailure(error);
+      }
+      _profilePhotoBytes = Uint8List.fromList(result.bytes);
+      notifyListeners();
+    }
+    return result;
   }
 
   void updateDeliveryAddress({required String title, required String address}) {
@@ -464,6 +515,7 @@ class FlowinAppState extends ChangeNotifier {
 
   // Payments & Wallet
   int _walletBalance = 245000;
+  int _customPaymentCounter = 0;
   String _selectedPaymentId = 'wallet';
   final List<SavedPaymentMethod> _paymentMethods = [
     const SavedPaymentMethod(
@@ -519,14 +571,41 @@ class FlowinAppState extends ChangeNotifier {
     notifyListeners();
   }
 
+  IconData _resolvePaymentIcon(String label) {
+    final lower = label.toLowerCase();
+    if (lower.contains('wallet') ||
+        lower.contains('gopay') ||
+        lower.contains('ovo') ||
+        lower.contains('dana') ||
+        lower.contains('shopee')) {
+      return Icons.account_balance_wallet_rounded;
+    }
+    if (lower.contains('bank') ||
+        lower.contains('qris') ||
+        lower.contains('bca') ||
+        lower.contains('mandiri') ||
+        lower.contains('bri') ||
+        lower.contains('bni') ||
+        lower.contains('va')) {
+      return Icons.account_balance_rounded;
+    }
+    return Icons.credit_card_rounded;
+  }
+
   void addPaymentMethod(String label, String subtitle) {
-    final id = 'custom_${_paymentMethods.length + 1}';
+    final cleanLabel = label.trim();
+    if (cleanLabel.isEmpty) return;
+    final cleanSubtitle = subtitle.trim().isEmpty
+        ? 'Demo linked payment'
+        : subtitle.trim();
+    _customPaymentCounter += 1;
+    final id = 'custom_$_customPaymentCounter';
     _paymentMethods.add(
       SavedPaymentMethod(
         id: id,
-        label: label,
-        subtitle: subtitle,
-        icon: Icons.credit_card_rounded,
+        label: cleanLabel,
+        subtitle: cleanSubtitle,
+        icon: _resolvePaymentIcon(cleanLabel),
         accentColor: const Color(0xFF1565D8),
       ),
     );

@@ -6,6 +6,7 @@ import '../../core/animations/staggered_reveal.dart';
 import '../../core/design_system/flowin_colors.dart';
 import '../../core/design_system/flowin_spacing.dart';
 import '../../core/design_system/flowin_typography.dart';
+import '../../core/utils/flowin_validators.dart';
 import '../../shared/widgets/flowin_button.dart';
 import '../../shared/widgets/flowin_text_field.dart';
 import '../../shared/widgets/flowin_toast.dart';
@@ -51,63 +52,22 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  void _openForgotPasswordSheet() {
-    final resetController = TextEditingController(text: _emailController.text);
-    showModalBottomSheet<void>(
+  Future<void> _openForgotPasswordSheet() async {
+    final completed = await showModalBottomSheet<bool>(
       context: context,
       isScrollControlled: true,
-      builder: (ctx) => Padding(
-        padding: EdgeInsets.fromLTRB(
-          24,
-          20,
-          24,
-          MediaQuery.viewInsetsOf(ctx).bottom + 24,
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Center(
-              child: Container(
-                width: 40,
-                height: 4,
-                decoration: BoxDecoration(
-                  color: FlowinColors.border,
-                  borderRadius: FlowinRadii.fullPill,
-                ),
-              ),
-            ),
-            const SizedBox(height: 18),
-            Text('Reset Password', style: FlowinTypography.headlineMedium),
-            const SizedBox(height: 6),
-            Text(
-              'Enter your registered Flowin email and we will send a quick verification link.',
-              style: FlowinTypography.bodyMedium,
-            ),
-            const SizedBox(height: 16),
-            FlowinTextField(
-              label: 'Email Address',
-              controller: resetController,
-              prefixIcon: Icons.mail_outline_rounded,
-              keyboardType: TextInputType.emailAddress,
-            ),
-            const SizedBox(height: 18),
-            FlowinButton(
-              label: 'Send Recovery Link',
-              onPressed: () {
-                Navigator.pop(ctx);
-                FlowinToast.show(
-                  context,
-                  title: 'Recovery Email Sent',
-                  message: 'Instructions dispatched to ${resetController.text}.',
-                  type: FlowinToastType.success,
-                );
-              },
-            ),
-          ],
-        ),
+      builder: (_) => _ForgotPasswordSheet(
+        initialEmail: _emailController.text.trim(),
       ),
-    ).whenComplete(resetController.dispose);
+    );
+    if (completed == true && mounted) {
+      FlowinToast.show(
+        context,
+        title: 'Recovery Simulation Completed',
+        message: 'Returned cleanly to sign in.',
+        type: FlowinToastType.info,
+      );
+    }
   }
 
   @override
@@ -376,6 +336,183 @@ class _LoginScreenState extends State<LoginScreen> {
           ],
         ),
       ),
+      ),
+    );
+  }
+}
+
+class _ForgotPasswordSheet extends StatefulWidget {
+  const _ForgotPasswordSheet({required this.initialEmail});
+
+  final String initialEmail;
+
+  @override
+  State<_ForgotPasswordSheet> createState() => _ForgotPasswordSheetState();
+}
+
+class _ForgotPasswordSheetState extends State<_ForgotPasswordSheet> {
+  final _formKey = GlobalKey<FormState>();
+  late final TextEditingController _emailController;
+  String? _simulatedEmail;
+
+  @override
+  void initState() {
+    super.initState();
+    _emailController = TextEditingController(text: widget.initialEmail);
+  }
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    super.dispose();
+  }
+
+  void _submit() {
+    if (!(_formKey.currentState?.validate() ?? false)) {
+      return;
+    }
+    setState(() {
+      _simulatedEmail = _emailController.text.trim();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final bottomInset = MediaQuery.viewInsetsOf(context).bottom;
+    final completedEmail = _simulatedEmail;
+
+    return Padding(
+      padding: EdgeInsets.only(bottom: bottomInset),
+      child: SafeArea(
+        top: false,
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.fromLTRB(24, 14, 24, 24),
+          child: completedEmail != null
+              ? Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Center(
+                      child: Container(
+                        width: 40,
+                        height: 4,
+                        decoration: BoxDecoration(
+                          color: FlowinColors.border,
+                          borderRadius: FlowinRadii.fullPill,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    Center(
+                      child: Container(
+                        width: 60,
+                        height: 60,
+                        decoration: const BoxDecoration(
+                          color: FlowinColors.cyanMist,
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(
+                          Icons.mark_email_read_rounded,
+                          color: FlowinColors.primary,
+                          size: 30,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 14),
+                    Text(
+                      'Recovery Simulation Completed',
+                      textAlign: TextAlign.center,
+                      style: FlowinTypography.headlineMedium,
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      'Recovery link simulation completed for $completedEmail. If this were a connected service, a reset email would be sent to your address.',
+                      textAlign: TextAlign.center,
+                      style: FlowinTypography.bodyMedium,
+                    ),
+                    const SizedBox(height: 20),
+                    FlowinButton(
+                      label: 'Back to Login',
+                      icon: Icons.arrow_back_rounded,
+                      onPressed: () => Navigator.of(context).pop(true),
+                    ),
+                  ],
+                )
+              : Form(
+                  key: _formKey,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Center(
+                        child: Container(
+                          width: 40,
+                          height: 4,
+                          decoration: BoxDecoration(
+                            color: FlowinColors.border,
+                            borderRadius: FlowinRadii.fullPill,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 18),
+                      Text(
+                        'Reset Password',
+                        style: FlowinTypography.headlineMedium,
+                      ),
+                      const SizedBox(height: 6),
+                      Text(
+                        'Enter your registered Flowin email address to simulate a password recovery request.',
+                        style: FlowinTypography.bodyMedium,
+                      ),
+                      const SizedBox(height: 12),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 10,
+                        ),
+                        decoration: BoxDecoration(
+                          color: FlowinColors.cyanTint,
+                          borderRadius: FlowinRadii.innerCard,
+                          border: Border.all(color: FlowinColors.cyanMist),
+                        ),
+                        child: Row(
+                          children: [
+                            const Icon(
+                              Icons.info_outline_rounded,
+                              size: 18,
+                              color: FlowinColors.primary,
+                            ),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              child: Text(
+                                'Frontend demo — no real recovery email is sent.',
+                                style: FlowinTypography.caption.copyWith(
+                                  color: FlowinColors.inkSecondary,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      FlowinTextField(
+                        label: 'Email Address',
+                        hint: 'name@flowin.id',
+                        controller: _emailController,
+                        prefixIcon: Icons.mail_outline_rounded,
+                        keyboardType: TextInputType.emailAddress,
+                        validator: FlowinValidators.email,
+                      ),
+                      const SizedBox(height: 18),
+                      FlowinButton(
+                        label: 'Send Recovery Link',
+                        icon: Icons.mark_email_read_outlined,
+                        onPressed: _submit,
+                      ),
+                    ],
+                  ),
+                ),
+        ),
       ),
     );
   }

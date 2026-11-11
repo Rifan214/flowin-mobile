@@ -7,9 +7,9 @@ import '../../core/design_system/flowin_spacing.dart';
 import '../../core/design_system/flowin_typography.dart';
 import '../../shared/widgets/animated_price_text.dart';
 import '../../shared/widgets/flowin_button.dart';
-import '../../shared/widgets/flowin_text_field.dart';
 import '../../shared/widgets/flowin_toast.dart';
 import '../../state/flowin_app_state.dart';
+import '../../widgets/add_payment_method_sheet.dart';
 import '../../widgets/flowin_header.dart';
 import '../../widgets/payment_method_card.dart';
 
@@ -55,6 +55,7 @@ class PaymentMethodsScreen extends StatelessWidget {
                   AppHaptics.confirm();
                   appState.topUpWallet(chosen);
                   Navigator.pop(ctx);
+                  if (!context.mounted) return;
                   FlowinToast.show(
                     context,
                     title: 'Wallet Reloaded',
@@ -71,65 +72,11 @@ class PaymentMethodsScreen extends StatelessWidget {
     );
   }
 
-  void _openAddMethodSheet(BuildContext context, FlowinAppState appState) {
-    final labelCtrl = TextEditingController();
-    final subCtrl = TextEditingController();
-
-    showModalBottomSheet<void>(
-      context: context,
-      isScrollControlled: true,
-      builder: (ctx) => Padding(
-        padding: EdgeInsets.fromLTRB(
-          22,
-          18,
-          22,
-          MediaQuery.viewInsetsOf(ctx).bottom + 24,
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Add Payment Method', style: FlowinTypography.headlineMedium),
-            const SizedBox(height: 14),
-            FlowinTextField(
-              label: 'Account / Card Name',
-              hint: 'e.g. BCA Virtual Account / Mastercard',
-              controller: labelCtrl,
-              prefixIcon: Icons.credit_card_rounded,
-            ),
-            const SizedBox(height: 12),
-            FlowinTextField(
-              label: 'Subtitle / Notes',
-              hint: 'e.g. Verified instant payment',
-              controller: subCtrl,
-            ),
-            const SizedBox(height: 18),
-            FlowinButton(
-              label: 'Save Payment Method',
-              onPressed: () {
-                if (labelCtrl.text.trim().isEmpty) return;
-                appState.addPaymentMethod(
-                  labelCtrl.text.trim(),
-                  subCtrl.text.trim().isEmpty
-                      ? 'Saved payment method'
-                      : subCtrl.text.trim(),
-                );
-                Navigator.pop(ctx);
-                FlowinToast.show(
-                  context,
-                  title: 'Payment Method Saved',
-                  message: labelCtrl.text.trim(),
-                  type: FlowinToastType.success,
-                );
-              },
-            ),
-          ],
-        ),
-      ),
-    ).whenComplete(() {
-      labelCtrl.dispose();
-      subCtrl.dispose();
-    });
+  void _openAddMethodSheet(BuildContext context, FlowinAppState _) {
+    AddPaymentMethodSheet.show(
+      context,
+      submitLabel: 'Save Payment Method',
+    );
   }
 
   @override

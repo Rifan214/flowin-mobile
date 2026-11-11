@@ -4,9 +4,11 @@ import '../../core/animations/flowin_page_routes.dart';
 import '../../core/design_system/flowin_colors.dart';
 import '../../core/design_system/flowin_spacing.dart';
 import '../../core/design_system/flowin_typography.dart';
+import '../../core/services/profile_photo_picker.dart';
 import '../../shared/widgets/flowin_button.dart';
 import '../../shared/widgets/flowin_text_field.dart';
 import '../../shared/widgets/flowin_toast.dart';
+import '../../shared/widgets/flowin_user_avatar.dart';
 import '../../state/flowin_app_state.dart';
 import '../../widgets/flowin_header.dart';
 import '../../widgets/settings_section.dart';
@@ -29,6 +31,7 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
   late TextEditingController _phoneController;
   late TextEditingController _addressController;
   bool _initialized = false;
+  bool _isPickingPhoto = false;
 
   @override
   void didChangeDependencies() {
@@ -53,6 +56,104 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
       _addressController.dispose();
     }
     super.dispose();
+  }
+
+  Future<void> _openPhotoOptionsSheet(FlowinAppState appState) async {
+    if (_isPickingPhoto) return;
+    final action = await showModalBottomSheet<String>(
+      context: context,
+      builder: (ctx) => SafeArea(
+        top: false,
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(20, 14, 20, 20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Center(
+                child: Container(
+                  width: 40,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: FlowinColors.border,
+                    borderRadius: FlowinRadii.fullPill,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+              Text(
+                'Update Profile Photo',
+                style: FlowinTypography.headlineMedium,
+              ),
+              const SizedBox(height: 6),
+              Text(
+                'Pick an image from your device gallery to preview across Flowin.',
+                style: FlowinTypography.bodyMedium,
+              ),
+              const SizedBox(height: 16),
+              FlowinButton(
+                label: 'Choose from Gallery',
+                icon: Icons.photo_library_outlined,
+                onPressed: () => Navigator.pop(ctx, 'gallery'),
+              ),
+              if (appState.hasProfilePhoto) ...[
+                const SizedBox(height: 10),
+                FlowinButton(
+                  label: 'Remove Current Photo',
+                  icon: Icons.delete_outline_rounded,
+                  variant: FlowinButtonVariant.danger,
+                  onPressed: () => Navigator.pop(ctx, 'remove'),
+                ),
+              ],
+            ],
+          ),
+        ),
+      ),
+    );
+
+    if (!mounted || action == null) return;
+    if (action == 'gallery') {
+      await _pickProfilePhoto(appState);
+    } else if (action == 'remove') {
+      _removeProfilePhoto(appState);
+    }
+  }
+
+  Future<void> _pickProfilePhoto(FlowinAppState appState) async {
+    if (_isPickingPhoto) return;
+    setState(() => _isPickingPhoto = true);
+    final result = await appState.pickProfilePhoto();
+    if (!mounted) return;
+    setState(() => _isPickingPhoto = false);
+
+    switch (result) {
+      case PhotoPickSuccess():
+        FlowinToast.show(
+          context,
+          title: 'Profile Photo Updated',
+          message: 'Your new avatar is saved across your profile.',
+          type: FlowinToastType.success,
+        );
+      case PhotoPickCancelled():
+        break;
+      case PhotoPickFailure(:final message):
+        FlowinToast.show(
+          context,
+          title: 'Photo Upload Failed',
+          message: message,
+          type: FlowinToastType.error,
+        );
+    }
+  }
+
+  void _removeProfilePhoto(FlowinAppState appState) {
+    appState.clearProfilePhoto();
+    FlowinToast.show(
+      context,
+      title: 'Photo Removed',
+      message: 'Restored default Flowin profile avatar.',
+      type: FlowinToastType.info,
+    );
   }
 
   void _save(FlowinAppState appState) {
@@ -99,18 +200,54 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
                     children: [
                       // Clean Profile Avatar Crest
                       Container(
-                        width: 84,
-                        height: 84,
+                        padding: const EdgeInsets.all(3),
                         decoration: BoxDecoration(
-                          gradient: FlowinColors.oceanGradient,
                           shape: BoxShape.circle,
+                          gradient: FlowinColors.oceanGradient,
                           boxShadow: FlowinShadows.primaryGlow,
                         ),
-                        child: const Icon(
-                          Icons.person_rounded,
-                          color: Colors.white,
-                          size: 42,
+                        child: FlowinUserAvatar(
+                          photoBytes: appState.profilePhotoBytes,
+                          size: 86,
+                          showCameraBadge: true,
+                          isLoading: _isPickingPhoto,
+                          borderColor: FlowinColors.surface,
+                          borderWidth: 2,
+                          onTap: _isPickingPhoto
+                              ? null
+                              : () => _openPhotoOptionsSheet(appState),
                         ),
+                      ),
+                      const SizedBox(height: 10),
+                      Wrap(
+                        spacing: 6,
+                        alignment: WrapAlignment.center,
+                        children: [
+                          TextButton.icon(
+                            onPressed: _isPickingPhoto
+                                ? null
+                                : () => _openPhotoOptionsSheet(appState),
+                            icon: const Icon(
+                              Icons.photo_camera_outlined,
+                              size: 17,
+                            ),
+                            label: const Text('Edit Photo'),
+                          ),
+                          if (appState.hasProfilePhoto)
+                            TextButton.icon(
+                              onPressed: _isPickingPhoto
+                                  ? null
+                                  : () => _removeProfilePhoto(appState),
+                              style: TextButton.styleFrom(
+                                foregroundColor: FlowinColors.danger,
+                              ),
+                              icon: const Icon(
+                                Icons.delete_outline_rounded,
+                                size: 17,
+                              ),
+                              label: const Text('Remove'),
+                            ),
+                        ],
                       ),
                       const SizedBox(height: 10),
                       Text(
