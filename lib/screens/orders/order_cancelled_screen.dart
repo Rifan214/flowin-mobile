@@ -1,5 +1,13 @@
 import 'package:flutter/material.dart';
 
+import '../../core/animations/flowin_page_routes.dart';
+import '../../core/animations/motion_state_scenes.dart';
+import '../../core/design_system/flowin_colors.dart';
+import '../../core/design_system/flowin_spacing.dart';
+import '../../core/design_system/flowin_typography.dart';
+import '../../shared/widgets/flowin_button.dart';
+import '../../state/flowin_app_state.dart';
+import '../../widgets/flowin_header.dart';
 import '../main_navigation_screen.dart';
 
 class OrderCancelledScreen extends StatelessWidget {
@@ -7,111 +15,108 @@ class OrderCancelledScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appState = FlowinScope.of(context);
+
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Flowin"),
-        centerTitle: true,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(24),
+      backgroundColor: FlowinColors.background,
+      body: SafeArea(
         child: Column(
           children: [
-            const SizedBox(height: 40),
-
-            const Text(
-              "Order Cancelled",
-              style: TextStyle(
-                fontSize: 34,
-                fontWeight: FontWeight.bold,
-              ),
+            const FlowinHeader(
+              title: 'Order Cancelled',
+              leftIcon: SizedBox(width: 42),
+              rightIcon: SizedBox(width: 42),
             ),
-
-            const SizedBox(height: 40),
-
-            Container(
-              padding: const EdgeInsets.all(18),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(18),
-                border: Border.all(
-                  color: Colors.grey.shade300,
-                ),
-              ),
-              child: const Column(
-                children: [
-                  Row(
-                    children: [
-                      Text("Order ID"),
-                      Spacer(),
-                      Text(
-                        "#FLW-8924",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-
-                  Divider(height: 28),
-
-                  Row(
-                    children: [
-                      Text("Scheduled For"),
-                      Spacer(),
-                      Text(
-                        "Oct 26, 2026",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-
-                  SizedBox(height: 18),
-
-                  Row(
-                    children: [
-                      Text("Items"),
-                      Spacer(),
-                      Text(
-                        "2x 5G Purified Water",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-
-            const Spacer(),
-
-            SizedBox(
-              width: double.infinity,
-              height: 56,
-              child: FilledButton(
-                style: FilledButton.styleFrom(
-                  backgroundColor: const Color(0xffDCEBFF),
-                  foregroundColor: Colors.blue,
-                ),
-                onPressed: () {
-                  Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) =>
-                          const MainNavigationScreen(),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(24, 24, 24, 24),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Spacer(),
+                    const FlowinSuccessOrb(
+                      state: MotionSceneState.cancelled,
+                      accentColor: FlowinColors.danger,
+                      icon: Icons.close_rounded,
+                      size: 126,
                     ),
-                    (route) => false,
-                  );
-                },
-                child: const Text(
-                  "Back To Home",
+                    const SizedBox(height: 22),
+                    Text(
+                      'Delivery Cancelled',
+                      style: FlowinTypography.headlineLarge.copyWith(
+                        fontSize: 26,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    Text(
+                      'Order ${appState.lastOrderNumber} has been cancelled cleanly. No courier will be dispatched.',
+                      textAlign: TextAlign.center,
+                      style: FlowinTypography.bodyMedium.copyWith(
+                        fontSize: 14.5,
+                      ),
+                    ),
+                    const SizedBox(height: 22),
+                    Container(
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: FlowinColors.surface,
+                        borderRadius: FlowinRadii.card,
+                        boxShadow: FlowinShadows.cardSoft,
+                        border: Border.all(color: FlowinColors.border),
+                      ),
+                      child: Row(
+                        children: [
+                          Container(
+                            width: 40,
+                            height: 40,
+                            decoration: const BoxDecoration(
+                              color: FlowinColors.cyanMist,
+                              shape: BoxShape.circle,
+                            ),
+                            child: const Icon(
+                              Icons.account_balance_wallet_outlined,
+                              color: FlowinColors.primary,
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Automatic Refund Scheduled',
+                                  style: FlowinTypography.titleMedium.copyWith(
+                                    fontSize: 14,
+                                  ),
+                                ),
+                                Text(
+                                  'Returned to ${appState.selectedPaymentMethod.label}',
+                                  style: FlowinTypography.caption,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const Spacer(),
+                    FlowinButton(
+                      label: 'Back to Home',
+                      icon: Icons.home_rounded,
+                      onPressed: () {
+                        Navigator.pushAndRemoveUntil(
+                          context,
+                          FlowinPageRoute.fadeScale(
+                            const MainNavigationScreen(),
+                          ),
+                          (route) => false,
+                        );
+                      },
+                    ),
+                  ],
                 ),
               ),
             ),
-
-            const SizedBox(height: 30),
           ],
         ),
       ),

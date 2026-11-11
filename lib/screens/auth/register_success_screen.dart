@@ -1,6 +1,13 @@
 import 'package:flutter/material.dart';
 
-import '../../core/constants/app_colors.dart';
+import '../../core/animations/flowin_page_routes.dart';
+import '../../core/animations/liquid_wave_painter.dart';
+import '../../core/animations/motion_state_scenes.dart';
+import '../../core/animations/staggered_reveal.dart';
+import '../../core/design_system/flowin_colors.dart';
+import '../../core/design_system/flowin_spacing.dart';
+import '../../core/design_system/flowin_typography.dart';
+import '../../shared/widgets/flowin_button.dart';
 import 'login_screen.dart';
 
 class RegisterSuccessScreen extends StatelessWidget {
@@ -9,112 +16,136 @@ class RegisterSuccessScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F6FB),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 24,
-            vertical: 20,
+      backgroundColor: FlowinColors.background,
+      body: Stack(
+        children: [
+          Positioned.fill(
+            child: LiquidWaveBackdrop(
+              fillLevel: 0.22,
+              waveAmplitude: 14,
+              frontColor: FlowinColors.aqua.withValues(alpha: 0.14),
+              backColor: FlowinColors.primary.withValues(alpha: 0.10),
+            ),
           ),
-          child: Column(
-            children: [
-              const SizedBox(height: 30),
-
-              Image.asset(
-                'assets/images/flowin_logo.png',
-                width: 170,
-              ),
-
-              const Spacer(),
-
-              Container(
-                width: 180,
-                height: 180,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Colors.white,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.blue.withOpacity(0.08),
-                      blurRadius: 20,
-                    ),
-                  ],
-                ),
-                child: const Center(
-                  child: CircleAvatar(
-                    radius: 42,
-                    backgroundColor: AppColors.primary,
-                    child: Icon(
-                      Icons.check,
-                      color: Colors.white,
-                      size: 52,
-                    ),
+          SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(24, 32, 24, 28),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Spacer(),
+                  const FlowinSuccessOrb(
+                    state: MotionSceneState.success,
+                    accentColor: FlowinColors.success,
+                    icon: Icons.check_rounded,
+                    size: 136,
                   ),
-                ),
-              ),
-
-              const SizedBox(height: 60),
-
-              const Text(
-                "Register Success",
-                style: TextStyle(
-                  fontSize: 36,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-
-              const Spacer(),
-
-              SizedBox(
-                width: double.infinity,
-                height: 58,
-                child: FilledButton(
-                  onPressed: () {
-                    Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) =>
-                            const LoginScreen(),
-                      ),
-                      (route) => false,
-                    );
-                  },
-                  child: const Text(
-                    "Back to Login",
-                    style: TextStyle(
-                      fontSize: 18,
-                    ),
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: 55),
-
-              Opacity(
-                opacity: .35,
-                child: Row(
-                  mainAxisAlignment:
-                      MainAxisAlignment.center,
-                  children: const [
-                    Icon(
-                      Icons.water_drop_outlined,
-                    ),
-                    SizedBox(width: 6),
-                    Text(
-                      "Flowin",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
+                  const SizedBox(height: 24),
+                  StaggeredReveal(
+                    index: 0,
+                    child: Text(
+                      'Account Created!',
+                      textAlign: TextAlign.center,
+                      style: FlowinTypography.headlineLarge.copyWith(
+                        fontSize: 28,
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                  const SizedBox(height: 10),
+                  StaggeredReveal(
+                    index: 1,
+                    child: Text(
+                      'Your Flowin hydration profile is ready. Sign in now to schedule fresh gallon deliveries.',
+                      textAlign: TextAlign.center,
+                      style: FlowinTypography.bodyMedium.copyWith(fontSize: 14.5),
+                    ),
+                  ),
+                  const SizedBox(height: 26),
+                  StaggeredReveal(
+                    index: 2,
+                    child: Container(
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: FlowinColors.surface,
+                        borderRadius: FlowinRadii.card,
+                        boxShadow: FlowinShadows.cardSoft,
+                        border: Border.all(color: FlowinColors.border),
+                      ),
+                      child: const Row(
+                        children: [
+                          Expanded(
+                            child: _BenefitItem(
+                              icon: Icons.bolt_rounded,
+                              label: '45m Express',
+                            ),
+                          ),
+                          Expanded(
+                            child: _BenefitItem(
+                              icon: Icons.verified_rounded,
+                              label: 'Lab Certified',
+                            ),
+                          ),
+                          Expanded(
+                            child: _BenefitItem(
+                              icon: Icons.autorenew_rounded,
+                              label: 'Easy Refill',
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const Spacer(),
+                  FlowinButton(
+                    label: 'Sign In to Flowin',
+                    trailingIcon: Icons.arrow_forward_rounded,
+                    onPressed: () {
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        FlowinPageRoute.fadeScale(const LoginScreen()),
+                        (route) => false,
+                      );
+                    },
+                  ),
+                ],
               ),
-
-              const SizedBox(height: 30),
-            ],
+            ),
           ),
-        ),
+        ],
       ),
+    );
+  }
+}
+
+class _BenefitItem extends StatelessWidget {
+  const _BenefitItem({required this.icon, required this.label});
+
+  final IconData icon;
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          width: 40,
+          height: 40,
+          decoration: const BoxDecoration(
+            color: FlowinColors.cyanMist,
+            shape: BoxShape.circle,
+          ),
+          child: Icon(icon, size: 20, color: FlowinColors.primary),
+        ),
+        const SizedBox(height: 6),
+        Text(
+          label,
+          textAlign: TextAlign.center,
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+          style: FlowinTypography.caption.copyWith(fontWeight: FontWeight.w600),
+        ),
+      ],
     );
   }
 }

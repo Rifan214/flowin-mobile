@@ -1,186 +1,116 @@
 import 'package:flutter/material.dart';
 
-import '../../core/constants/app_colors.dart';
+import '../../core/animations/flowin_page_routes.dart';
+import '../../core/animations/liquid_wave_painter.dart';
+import '../../core/animations/motion_state_scenes.dart';
+import '../../core/design_system/flowin_colors.dart';
+import '../../core/design_system/flowin_spacing.dart';
+import '../../core/design_system/flowin_typography.dart';
 import '../../models/subscription_plan.dart';
+import '../../shared/widgets/flowin_button.dart';
 import '../main_navigation_screen.dart';
 
 class SubscriptionSuccessScreen extends StatelessWidget {
-  final SubscriptionPlan plan;
+  const SubscriptionSuccessScreen({super.key, this.plan});
 
-  const SubscriptionSuccessScreen({
-    super.key,
-    required this.plan,
-  });
+  final SubscriptionPlan? plan;
 
   @override
   Widget build(BuildContext context) {
+    final title = plan?.title ?? 'Flowin Hydration Plan';
+
     return Scaffold(
-      backgroundColor: const Color(0xffF6F8FC),
-
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 24,
-            vertical: 24,
+      backgroundColor: FlowinColors.background,
+      body: Stack(
+        children: [
+          Positioned.fill(
+            child: LiquidWaveBackdrop(
+              fillLevel: 0.22,
+              waveAmplitude: 13,
+              frontColor: FlowinColors.aqua.withValues(alpha: 0.16),
+              backColor: FlowinColors.primary.withValues(alpha: 0.08),
+            ),
           ),
-          child: Column(
-            children: [
-              const SizedBox(height: 10),
-
-              Image.asset(
-                'assets/images/flowin_logo.png',
-                width: 120,
-              ),
-
-              const SizedBox(height: 40),
-
-              Container(
-                width: 170,
-                height: 170,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  shape: BoxShape.circle,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: .05),
-                      blurRadius: 20,
-                    ),
-                  ],
-                ),
-                child: const Center(
-                  child: CircleAvatar(
-                    radius: 42,
-                    backgroundColor: AppColors.primary,
-                    child: Icon(
-                      Icons.check,
-                      size: 52,
-                      color: Colors.white,
-                    ),
+          SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(24, 32, 24, 24),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Spacer(),
+                  const FlowinSuccessOrb(
+                    state: MotionSceneState.success,
+                    accentColor: FlowinColors.success,
+                    icon: Icons.autorenew_rounded,
+                    size: 130,
                   ),
-                ),
-              ),
-
-              const SizedBox(height: 40),
-
-              const Text(
-                "Subscription Active!",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 34,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-
-              const SizedBox(height: 14),
-
-              Text(
-                "Your ${plan.title} subscription has been activated successfully.",
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  fontSize: 17,
-                  color: Colors.grey,
-                  height: 1.5,
-                ),
-              ),
-
-              const SizedBox(height: 35),
-
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(18),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(18),
-                  border: Border.all(
-                    color: Colors.grey.shade300,
+                  const SizedBox(height: 22),
+                  Text(
+                    'Subscription Activated!',
+                    textAlign: TextAlign.center,
+                    style: FlowinTypography.headlineLarge.copyWith(fontSize: 26),
                   ),
-                ),
-                child: Column(
-                  children: [
-                    Row(
+                  const SizedBox(height: 10),
+                  Text(
+                    'Your $title schedule is live. Enjoy hassle-free water gallon refills delivered right on time.',
+                    textAlign: TextAlign.center,
+                    style: FlowinTypography.bodyMedium.copyWith(fontSize: 14.5),
+                  ),
+                  const SizedBox(height: 22),
+                  Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: FlowinColors.surface,
+                      borderRadius: FlowinRadii.card,
+                      boxShadow: FlowinShadows.cardSoft,
+                      border: Border.all(color: FlowinColors.border),
+                    ),
+                    child: Row(
                       children: [
-                        const Text(
-                          "Current Plan",
-                          style: TextStyle(
-                            fontSize: 16,
+                        Container(
+                          width: 40,
+                          height: 40,
+                          decoration: const BoxDecoration(
+                            color: FlowinColors.cyanMist,
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(
+                            Icons.event_available_rounded,
+                            color: FlowinColors.primary,
                           ),
                         ),
-                        const Spacer(),
-                        Text(
-                          plan.title,
-                          style: const TextStyle(
-                            fontSize: 17,
-                            fontWeight: FontWeight.bold,
-                            color: AppColors.primary,
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Text(
+                            'Manage pause, brand swaps, or delivery frequency anytime in your Profile tab.',
+                            style: FlowinTypography.caption.copyWith(
+                              color: FlowinColors.ink,
+                              height: 1.4,
+                            ),
                           ),
                         ),
                       ],
                     ),
-
-                    const SizedBox(height: 16),
-
-                    const Divider(),
-
-                    const SizedBox(height: 16),
-
-                    Row(
-                      children: [
-                        const Text(
-                          "Price",
-                          style: TextStyle(
-                            fontSize: 16,
-                          ),
-                        ),
-                        const Spacer(),
-                        Text(
-                          "\$${plan.price}/delivery",
-                          style: const TextStyle(
-                            fontSize: 17,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-
-              const SizedBox(height: 50),
-
-              SizedBox(
-                width: double.infinity,
-                height: 58,
-                child: FilledButton(
-                  style: FilledButton.styleFrom(
-                    backgroundColor: AppColors.primary,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(18),
-                    ),
                   ),
-                  onPressed: () {
-                    Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) =>
-                            const MainNavigationScreen(),
-                      ),
-                      (route) => false,
-                    );
-                  },
-                  child: const Text(
-                    "Back to Home",
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
-                    ),
+                  const Spacer(),
+                  FlowinButton(
+                    label: 'Back to Home',
+                    icon: Icons.home_rounded,
+                    onPressed: () {
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        FlowinPageRoute.fadeScale(
+                          const MainNavigationScreen(),
+                        ),
+                        (route) => false,
+                      );
+                    },
                   ),
-                ),
+                ],
               ),
-
-              const SizedBox(height: 20),
-            ],
+            ),
           ),
-        ),
+        ],
       ),
     );
   }

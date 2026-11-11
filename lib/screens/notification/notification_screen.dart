@@ -1,133 +1,101 @@
 import 'package:flutter/material.dart';
 
-import '../../core/constants/app_colors.dart';
-import '../../data/dummy_notifications.dart';
-import '../../widgets/notification_card.dart';
+import '../../core/design_system/flowin_colors.dart';
+import '../../core/design_system/flowin_typography.dart';
+import '../../shared/widgets/flowin_toast.dart';
+import '../../state/flowin_app_state.dart';
 import '../../widgets/flowin_header.dart';
+import '../../widgets/notification_card.dart';
 
 class NotificationScreen extends StatelessWidget {
   const NotificationScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final todayNotifications = dummyNotifications
-        .where((item) => item.isToday)
-        .toList();
-
-    final yesterdayNotifications = dummyNotifications
-        .where((item) => !item.isToday)
-        .toList();
+    final appState = FlowinScope.of(context);
+    final list = appState.notifications;
+    final todayIndices = <int>[];
+    final earlierIndices = <int>[];
+    for (int i = 0; i < list.length; i++) {
+      if (list[i].isToday) {
+        todayIndices.add(i);
+      } else {
+        earlierIndices.add(i);
+      }
+    }
 
     return Scaffold(
-      backgroundColor: const Color(0xffF6F8FC),
-
+      backgroundColor: FlowinColors.background,
       body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const FlowinHeader(
-                leftIcon: Icon(Icons.arrow_back_ios_new),
-                rightIcon: SizedBox(width: 48),
-              ),
-
-              const SizedBox(height: 24),
-
-              Row(
-                children: [
-                  const Text(
-                    "Notifications",
-                    style: TextStyle(
-                      fontSize: 30,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-
-                  const Spacer(),
-
+        child: Column(
+          children: [
+            FlowinHeader(
+              title: 'Notifications',
+              actions: [
+                if (appState.unreadNotificationsCount > 0)
                   TextButton(
                     onPressed: () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text(
-                            "All notifications marked as read",
-                          ),
-                        ),
+                      appState.markAllNotificationsRead();
+                      FlowinToast.show(
+                        context,
+                        title: 'All Caught Up',
+                        message: 'Every notification marked as read.',
+                        type: FlowinToastType.info,
                       );
                     },
-                    child: const Text(
-                      "Mark all as read",
-                      style: TextStyle(
-                        color: AppColors.primary,
-                        fontWeight: FontWeight.w600,
+                    child: Text(
+                      'Mark all',
+                      style: FlowinTypography.caption.copyWith(
+                        color: FlowinColors.primary,
+                        fontWeight: FontWeight.w700,
                       ),
                     ),
-                  ),
+                  )
+                else
+                  const SizedBox(width: 42),
+              ],
+            ),
+            Expanded(
+              child: ListView(
+                padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
+                children: [
+                  if (todayIndices.isNotEmpty) ...[
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 10),
+                      child: Text(
+                        'TODAY',
+                        style: FlowinTypography.overline.copyWith(
+                          color: FlowinColors.inkSecondary,
+                        ),
+                      ),
+                    ),
+                    for (final i in todayIndices)
+                      NotificationCard(
+                        notification: list[i],
+                        onTap: () => appState.markNotificationRead(i),
+                      ),
+                    const SizedBox(height: 16),
+                  ],
+                  if (earlierIndices.isNotEmpty) ...[
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 10),
+                      child: Text(
+                        'EARLIER',
+                        style: FlowinTypography.overline.copyWith(
+                          color: FlowinColors.inkSecondary,
+                        ),
+                      ),
+                    ),
+                    for (final i in earlierIndices)
+                      NotificationCard(
+                        notification: list[i],
+                        onTap: () => appState.markNotificationRead(i),
+                      ),
+                  ],
                 ],
               ),
-
-              const Divider(),
-
-              const SizedBox(height: 20),
-
-              const Text(
-                "TODAY",
-                style: TextStyle(
-                  color: Colors.black54,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 1,
-                ),
-              ),
-
-              const SizedBox(height: 16),
-
-              ...todayNotifications.map(
-                (notification) => NotificationCard(
-                  notification: notification,
-                  onTap: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(
-                          notification.title,
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ),
-
-              const SizedBox(height: 18),
-
-              const Text(
-                "YESTERDAY",
-                style: TextStyle(
-                  color: Colors.black54,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 1,
-                ),
-              ),
-
-              const SizedBox(height: 16),
-
-              ...yesterdayNotifications.map(
-                (notification) => NotificationCard(
-                  notification: notification,
-                  onTap: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(
-                          notification.title,
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ),
-
-              const SizedBox(height: 30),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

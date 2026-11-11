@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
 
-import '../../core/constants/app_colors.dart';
+import '../../core/animations/flowin_page_routes.dart';
+import '../../core/animations/liquid_wave_painter.dart';
+import '../../core/animations/motion_state_scenes.dart';
+import '../../core/design_system/flowin_colors.dart';
+import '../../core/design_system/flowin_spacing.dart';
+import '../../core/design_system/flowin_typography.dart';
+import '../../shared/widgets/flowin_button.dart';
 import '../main_navigation_screen.dart';
 
 class ReviewSuccessScreen extends StatelessWidget {
@@ -9,111 +15,95 @@ class ReviewSuccessScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F6FB),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 24,
-            vertical: 20,
+      backgroundColor: FlowinColors.background,
+      body: Stack(
+        children: [
+          Positioned.fill(
+            child: LiquidWaveBackdrop(
+              fillLevel: 0.22,
+              waveAmplitude: 13,
+              frontColor: FlowinColors.aqua.withValues(alpha: 0.14),
+              backColor: FlowinColors.primary.withValues(alpha: 0.08),
+            ),
           ),
-          child: Column(
-            children: [
-              const SizedBox(height: 30),
-
-              Image.asset(
-                'assets/images/flowin_logo.png',
-                width: 170,
-              ),
-
-              const Spacer(),
-
-              Container(
-                width: 180,
-                height: 180,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Colors.white,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.blue.withOpacity(0.08),
-                      blurRadius: 20,
+          SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(24, 32, 24, 24),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Spacer(),
+                  const FlowinSuccessOrb(
+                    state: MotionSceneState.success,
+                    accentColor: FlowinColors.primary,
+                    icon: Icons.favorite_rounded,
+                    size: 130,
+                  ),
+                  const SizedBox(height: 24),
+                  Text(
+                    'Thank You!',
+                    style: FlowinTypography.headlineLarge.copyWith(fontSize: 28),
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    'Your feedback helps Flowin keep every gallon delivery punctual, sanitary, and crystal clear.',
+                    textAlign: TextAlign.center,
+                    style: FlowinTypography.bodyMedium.copyWith(fontSize: 14.5),
+                  ),
+                  const SizedBox(height: 22),
+                  Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: FlowinColors.surface,
+                      borderRadius: FlowinRadii.card,
+                      boxShadow: FlowinShadows.cardSoft,
+                      border: Border.all(color: FlowinColors.border),
                     ),
-                  ],
-                ),
-                child: const Center(
-                  child: CircleAvatar(
-                    radius: 42,
-                    backgroundColor: AppColors.primary,
-                    child: Icon(
-                      Icons.check,
-                      color: Colors.white,
-                      size: 52,
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 40,
+                          height: 40,
+                          decoration: const BoxDecoration(
+                            color: FlowinColors.amberSoft,
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(
+                            Icons.stars_rounded,
+                            color: FlowinColors.amber,
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Text(
+                            '+25 Flowin Hydration Points added for reviewing!',
+                            style: FlowinTypography.titleMedium.copyWith(
+                              fontSize: 13.5,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                ),
-              ),
-
-              const SizedBox(height: 60),
-
-              const Text(
-                "Rating Berhasil",
-                style: TextStyle(
-                  fontSize: 36,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-
-              const Spacer(),
-
-              SizedBox(
-                width: double.infinity,
-                height: 58,
-                child: FilledButton(
-                  onPressed: () {
-                    Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) =>
-                            const MainNavigationScreen(),
-                      ),
-                      (route) => false,
-                    );
-                  },
-                  child: const Text(
-                    "Back to Home",
-                    style: TextStyle(
-                      fontSize: 18,
-                    ),
+                  const Spacer(),
+                  FlowinButton(
+                    label: 'Back to Home',
+                    icon: Icons.home_rounded,
+                    onPressed: () {
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        FlowinPageRoute.fadeScale(
+                          const MainNavigationScreen(),
+                        ),
+                        (route) => false,
+                      );
+                    },
                   ),
-                ),
+                ],
               ),
-
-              const SizedBox(height: 55),
-
-              Opacity(
-                opacity: .35,
-                child: Row(
-                  mainAxisAlignment:
-                      MainAxisAlignment.center,
-                  children: const [
-                    Icon(
-                      Icons.water_drop_outlined,
-                    ),
-                    SizedBox(width: 6),
-                    Text(
-                      "Flowin",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
-              const SizedBox(height: 30),
-            ],
+            ),
           ),
-        ),
+        ],
       ),
     );
   }

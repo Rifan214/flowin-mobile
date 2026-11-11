@@ -1,205 +1,140 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 
-import '../../core/constants/app_colors.dart';
+import '../../core/animations/flowin_page_routes.dart';
+import '../../core/animations/ticket_fold_card.dart';
+import '../../core/design_system/flowin_colors.dart';
+import '../../core/design_system/flowin_typography.dart';
 import '../../models/subscription_plan.dart';
+import '../../shared/widgets/flowin_button.dart';
+import '../../state/flowin_app_state.dart';
+import '../../widgets/flowin_header.dart';
 import 'subscription_success_screen.dart';
 
-class SubscriptionPaymentScreen extends StatefulWidget {
-  final SubscriptionPlan plan;
-
+class SubscriptionPaymentScreen extends StatelessWidget {
   const SubscriptionPaymentScreen({
     super.key,
     required this.plan,
+    this.deliverySlot = 'Morning (08:00 - 11:00)',
   });
 
-  @override
-  State<SubscriptionPaymentScreen> createState() =>
-      _SubscriptionPaymentScreenState();
-}
-
-class _SubscriptionPaymentScreenState
-    extends State<SubscriptionPaymentScreen> {
-
-  @override
-  void initState() {
-    super.initState();
-
-    Timer(
-      const Duration(seconds: 3),
-      () {
-        if (!mounted) return;
-
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (_) =>
-                SubscriptionSuccessScreen(
-              plan: widget.plan,
-            ),
-          ),
-        );
-      },
-    );
-  }
+  final SubscriptionPlan plan;
+  final String deliverySlot;
 
   @override
   Widget build(BuildContext context) {
+    final appState = FlowinScope.of(context);
+
     return Scaffold(
-      backgroundColor: const Color(0xffF6F8FC),
-
+      backgroundColor: FlowinColors.background,
       body: SafeArea(
-        child: Center(
-          child: Padding(
-            padding:
-                const EdgeInsets.symmetric(
-              horizontal: 28,
+        child: Column(
+          children: [
+            const FlowinHeader(
+              title: 'Confirm Plan',
+              rightIcon: SizedBox(width: 42),
             ),
-            child: Column(
-              mainAxisAlignment:
-                  MainAxisAlignment.center,
-              children: [
-
-                Container(
-                  width: 110,
-                  height: 110,
-                  decoration: BoxDecoration(
-                    color: AppColors.primary
-                        .withValues(alpha: .1),
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Icon(
-                    Icons.credit_card,
-                    size: 58,
-                    color: AppColors.primary,
-                  ),
-                ),
-
-                const SizedBox(height: 40),
-
-                const Text(
-                  "Processing Payment",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 32,
-                    fontWeight:
-                        FontWeight.bold,
-                  ),
-                ),
-
-                const SizedBox(height: 18),
-
-                Text(
-                  "Please wait while we activate your ${widget.plan.title} subscription.",
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    fontSize: 17,
-                    color: Colors.grey,
-                    height: 1.6,
-                  ),
-                ),
-
-                const SizedBox(height: 40),
-
-                Container(
-                  width: double.infinity,
-                  padding:
-                      const EdgeInsets.all(22),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius:
-                        BorderRadius.circular(
-                            20),
-                  ),
-                  child: Column(
-                    children: [
-
-                      Row(
+            Expanded(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.fromLTRB(20, 10, 20, 24),
+                child: Column(
+                  children: [
+                    TicketFoldCard(
+                      initiallyExpanded: true,
+                      header: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-
-                          const Icon(
-                            Icons.water_drop,
-                            color: AppColors.primary,
-                          ),
-
-                          const SizedBox(width: 10),
-
+                          Text(plan.title, style: FlowinTypography.titleLarge),
+                          Text(plan.description, style: FlowinTypography.caption),
+                        ],
+                      ),
+                      foldedSummary: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
                           Expanded(
                             child: Text(
-                              widget.plan.title,
-                              style:
-                                  const TextStyle(
-                                fontSize: 22,
-                                fontWeight:
-                                    FontWeight
-                                        .bold,
-                              ),
+                              'Cycle Total',
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: FlowinTypography.titleMedium,
                             ),
                           ),
-
+                          const SizedBox(width: 8),
                           Text(
-                            "\$${widget.plan.price}",
-                            style:
-                                const TextStyle(
-                              fontSize: 24,
-                              fontWeight:
-                                  FontWeight.bold,
-                              color:
-                                  AppColors.primary,
-                            ),
+                            FlowinFormat.currency(plan.price),
+                            style: FlowinTypography.priceLarge,
                           ),
                         ],
                       ),
-
-                      const SizedBox(height: 16),
-
-                      const Divider(),
-
-                      const SizedBox(height: 16),
-
-                      Row(
-                        children: const [
-
-                          Icon(
-                            Icons.lock,
-                            color: Colors.green,
+                      expandedDetails: Column(
+                        children: [
+                          _InfoLine(label: 'Slot', value: deliverySlot),
+                          const SizedBox(height: 8),
+                          _InfoLine(
+                            label: 'Destination',
+                            value: appState.deliveryTitle,
                           ),
-
-                          SizedBox(width: 10),
-
-                          Expanded(
-                            child: Text(
-                              "Secure payment is being processed",
-                            ),
+                          const SizedBox(height: 8),
+                          _InfoLine(
+                            label: 'Payment',
+                            value: appState.selectedPaymentMethod.label,
+                          ),
+                          const SizedBox(height: 8),
+                          const _InfoLine(
+                            label: 'Priority Shipping',
+                            value: 'FREE (Member Perk)',
                           ),
                         ],
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-
-                const SizedBox(height: 50),
-
-                const CircularProgressIndicator(
-                  color: AppColors.primary,
-                ),
-
-                const SizedBox(height: 24),
-
-                const Text(
-                  "Processing...",
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight:
-                        FontWeight.w600,
-                  ),
-                ),
-              ],
+              ),
             ),
-          ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 8, 20, 18),
+              child: FlowinButton(
+                label: 'Activate Subscription',
+                icon: Icons.verified_rounded,
+                onPressed: () {
+                  appState.activateSubscription(plan);
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    FlowinPageRoute.fadeScale(
+                      SubscriptionSuccessScreen(plan: plan),
+                    ),
+                    (route) => false,
+                  );
+                },
+              ),
+            ),
+          ],
         ),
       ),
+    );
+  }
+}
+
+class _InfoLine extends StatelessWidget {
+  const _InfoLine({required this.label, required this.value});
+
+  final String label;
+  final String value;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(label, style: FlowinTypography.bodyMedium),
+        const SizedBox(width: 12),
+        Flexible(
+          child: Text(
+            value,
+            textAlign: TextAlign.end,
+            style: FlowinTypography.titleMedium.copyWith(fontSize: 13.5),
+          ),
+        ),
+      ],
     );
   }
 }

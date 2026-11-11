@@ -1,240 +1,404 @@
 import 'package:flutter/material.dart';
 
-import '../checkout/checkout_screen.dart';
-import '../../core/constants/app_colors.dart';
-import '../../data/dummy_cart.dart';
-import '../../widgets/flowin_header.dart';
+import '../../core/animations/flowin_page_routes.dart';
+import '../../core/animations/motion_state_scenes.dart';
+import '../../core/animations/staggered_reveal.dart';
+import '../../core/design_system/flowin_colors.dart';
+import '../../core/design_system/flowin_spacing.dart';
+import '../../core/design_system/flowin_typography.dart';
+import '../../shared/widgets/animated_price_text.dart';
+import '../../shared/widgets/flowin_button.dart';
+import '../../shared/widgets/flowin_text_field.dart';
+import '../../shared/widgets/flowin_toast.dart';
+import '../../state/flowin_app_state.dart';
 import '../../widgets/cart_item_card.dart';
+import '../../widgets/flowin_header.dart';
+import '../checkout/checkout_screen.dart';
+import '../main_navigation_screen.dart';
 
 class CartScreen extends StatelessWidget {
   const CartScreen({super.key});
 
+  void _openEditAddressSheet(BuildContext context, FlowinAppState appState) {
+    final labelCtrl = TextEditingController(text: appState.deliveryTitle);
+    final addrCtrl = TextEditingController(text: appState.deliveryAddress);
+
+    showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      builder: (ctx) => Padding(
+        padding: EdgeInsets.fromLTRB(
+          22,
+          18,
+          22,
+          MediaQuery.viewInsetsOf(ctx).bottom + 24,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Center(
+              child: Container(
+                width: 40,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: FlowinColors.border,
+                  borderRadius: FlowinRadii.fullPill,
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
+            Text('Delivery Address', style: FlowinTypography.headlineMedium),
+            const SizedBox(height: 14),
+            FlowinTextField(
+              label: 'Location Label',
+              controller: labelCtrl,
+              prefixIcon: Icons.bookmark_outline_rounded,
+            ),
+            const SizedBox(height: 12),
+            FlowinTextField(
+              label: 'Full Street & Unit',
+              controller: addrCtrl,
+              prefixIcon: Icons.location_on_outlined,
+              maxLines: 2,
+            ),
+            const SizedBox(height: 18),
+            FlowinButton(
+              label: 'Save Delivery Address',
+              onPressed: () {
+                appState.updateDeliveryAddress(
+                  title: labelCtrl.text,
+                  address: addrCtrl.text,
+                );
+                Navigator.pop(ctx);
+                FlowinToast.show(
+                  context,
+                  title: 'Address Updated',
+                  message: appState.deliveryAddress,
+                  type: FlowinToastType.success,
+                );
+              },
+            ),
+          ],
+        ),
+      ),
+    ).whenComplete(() {
+      labelCtrl.dispose();
+      addrCtrl.dispose();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    final appState = FlowinScope.of(context);
+    final items = appState.cartItems;
+
     return SafeArea(
-      child: SingleChildScrollView(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment:
-              CrossAxisAlignment.start,
-          children: [
-            const FlowinHeader(),
-            const SizedBox(height: 20),
-
-            const Text(
-              'Your Cart',
-              style: TextStyle(
-                fontSize: 30,
-                fontWeight:
-                    FontWeight.bold,
-              ),
-            ),
-
-            const SizedBox(height: 6),
-
-            const Text(
-              'Review your hydration essentials',
-              style: TextStyle(
-                color: Colors.grey,
-                fontSize: 18,
-              ),
-            ),
-
-            const SizedBox(height: 24),
-
-            ...dummyCartItems.map(
-              (item) => CartItemCard(
-                item: item,
-              ),
-            ),
-
-            const SizedBox(height: 12),
-
-            Container(
-              padding:
-                  const EdgeInsets.all(18),
-              decoration: BoxDecoration(
-                color:
-                    const Color(0xFFEAF2FF),
-                borderRadius:
-                    BorderRadius.circular(
-                  18,
-                ),
-                border: Border.all(
-                  color:
-                      AppColors.primary,
-                ),
-              ),
-              child: Row(
-                children: [
-                  const Icon(
-                    Icons.local_shipping,
-                    color:
-                        AppColors.primary,
+      bottom: false,
+      child: Column(
+        children: [
+          FlowinHeader(
+            title: 'My Cart',
+            actions: [
+              if (items.isNotEmpty)
+                TextButton(
+                  onPressed: () {
+                    appState.clearCart();
+                    FlowinToast.show(
+                      context,
+                      title: 'Cart Cleared',
+                      message: 'Your hydration basket is now empty.',
+                      type: FlowinToastType.info,
+                    );
+                  },
+                  child: Text(
+                    'Clear',
+                    style: FlowinTypography.caption.copyWith(
+                      color: FlowinColors.danger,
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
+                )
+              else
+                const SizedBox(width: 42),
+            ],
+          ),
 
-                  const SizedBox(width: 12),
-
-                  const Expanded(
+          Expanded(
+            child: items.isEmpty
+                ? Center(
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(
+                        28,
+                        0,
+                        28,
+                        FlowinSpacing.navBarClearance,
+                      ),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const HydrationVesselGraphic(size: 124),
+                          const SizedBox(height: 18),
+                          Text(
+                            'Your Basket is Empty',
+                            style: FlowinTypography.headlineMedium,
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            'Add pure mountain gallons or alkaline refills to schedule an express drop.',
+                            textAlign: TextAlign.center,
+                            style: FlowinTypography.bodyMedium,
+                          ),
+                          const SizedBox(height: 22),
+                          FlowinButton(
+                            label: 'Explore Water Catalog',
+                            icon: Icons.water_drop_rounded,
+                            expand: false,
+                            onPressed: () =>
+                                MainNavigationScreen.goToTab(context, 0),
+                          ),
+                        ],
+                      ),
+                    ),
+                  )
+                : SingleChildScrollView(
+                    padding: const EdgeInsets.fromLTRB(
+                      20,
+                      4,
+                      20,
+                      FlowinSpacing.navBarClearance,
+                    ),
                     child: Column(
-                      crossAxisAlignment:
-                          CrossAxisAlignment
-                              .start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          'Delivery To',
-                          style: TextStyle(
-                            color: AppColors
-                                .primary,
-                            fontWeight:
-                                FontWeight
-                                    .bold,
+                        // Editable Delivery Location Banner
+                        Container(
+                          padding: const EdgeInsets.all(14),
+                          decoration: BoxDecoration(
+                            color: FlowinColors.surface,
+                            borderRadius: FlowinRadii.card,
+                            boxShadow: FlowinShadows.cardSoft,
+                            border: Border.all(
+                              color: FlowinColors.primary.withValues(alpha: 0.2),
+                            ),
+                          ),
+                          child: Row(
+                            children: [
+                              Container(
+                                width: 40,
+                                height: 40,
+                                decoration: BoxDecoration(
+                                  color: FlowinColors.cyanMist,
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: const Icon(
+                                  Icons.location_on_rounded,
+                                  color: FlowinColors.primary,
+                                  size: 20,
+                                ),
+                              ),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      appState.deliveryTitle,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: FlowinTypography.titleMedium
+                                          .copyWith(fontSize: 13.5),
+                                    ),
+                                    const SizedBox(height: 2),
+                                    Text(
+                                      appState.deliveryAddress,
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: FlowinTypography.caption,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              TextButton(
+                                onPressed: () =>
+                                    _openEditAddressSheet(context, appState),
+                                child: Text(
+                                  'Edit',
+                                  style: FlowinTypography.titleMedium.copyWith(
+                                    color: FlowinColors.primary,
+                                    fontSize: 13.5,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                        SizedBox(height: 4),
-                        Text(
-                          '2442 Riverside Dr, Suite 402',
+                        const SizedBox(height: 16),
+
+                        // Swipeable Cart Items
+                        ...List.generate(items.length, (index) {
+                          final item = items[index];
+                          return StaggeredReveal(
+                            index: index,
+                            child: Dismissible(
+                              key: ValueKey('cart_${item.name}_$index'),
+                              direction: DismissDirection.endToStart,
+                              background: Container(
+                                margin: const EdgeInsets.only(bottom: 12),
+                                padding: const EdgeInsets.only(right: 22),
+                                alignment: Alignment.centerRight,
+                                decoration: BoxDecoration(
+                                  color: FlowinColors.dangerSoft,
+                                  borderRadius: FlowinRadii.card,
+                                ),
+                                child: const Icon(
+                                  Icons.delete_outline_rounded,
+                                  color: FlowinColors.danger,
+                                ),
+                              ),
+                              onDismissed: (_) {
+                                final removed =
+                                    appState.removeCartItemAt(index);
+                                if (removed != null) {
+                                  FlowinToast.show(
+                                    context,
+                                    title: 'Removed ${removed.name}',
+                                    message: 'Updated cart subtotal.',
+                                    type: FlowinToastType.info,
+                                    actionLabel: 'Undo',
+                                    onAction: () => appState.restoreCartItem(
+                                      index,
+                                      removed,
+                                    ),
+                                  );
+                                }
+                              },
+                              child: CartItemCard(
+                                item: item,
+                                onIncrement: () =>
+                                    appState.incrementCartQuantity(index),
+                                onDecrement: () =>
+                                    appState.decrementCartQuantity(index),
+                                onRemove: () {
+                                  final removed =
+                                      appState.removeCartItemAt(index);
+                                  if (removed != null) {
+                                    FlowinToast.show(
+                                      context,
+                                      title: 'Removed ${removed.name}',
+                                      message: 'Tap Undo to put it back.',
+                                      type: FlowinToastType.info,
+                                      actionLabel: 'Undo',
+                                      onAction: () => appState.restoreCartItem(
+                                        index,
+                                        removed,
+                                      ),
+                                    );
+                                  }
+                                },
+                              ),
+                            ),
+                          );
+                        }),
+                        const SizedBox(height: 6),
+
+                        // Live Order Summary Card
+                        Container(
+                          padding: const EdgeInsets.all(18),
+                          decoration: BoxDecoration(
+                            color: FlowinColors.surface,
+                            borderRadius: FlowinRadii.card,
+                            boxShadow: FlowinShadows.cardSoft,
+                            border: Border.all(
+                              color: FlowinColors.border.withValues(alpha: 0.7),
+                            ),
+                          ),
+                          child: Column(
+                            children: [
+                              _SummaryRow(
+                                label:
+                                    'Subtotal (${appState.cartItemCount} items)',
+                                amount: appState.subtotal,
+                              ),
+                              const SizedBox(height: 8),
+                              _SummaryRow(
+                                label: 'Express Delivery Fee',
+                                amount: appState.deliveryFee,
+                              ),
+                              const SizedBox(height: 8),
+                              _SummaryRow(
+                                label: 'Service Tax (5%)',
+                                amount: appState.tax,
+                              ),
+                              const Padding(
+                                padding: EdgeInsets.symmetric(vertical: 12),
+                                child: Divider(),
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    'Total',
+                                    style: FlowinTypography.titleLarge,
+                                  ),
+                                  AnimatedPriceText(
+                                    amount: appState.total,
+                                    style: FlowinTypography.priceLarge,
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 16),
+                              FlowinButton(
+                                label: 'Proceed to Checkout',
+                                trailingIcon: Icons.arrow_forward_rounded,
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    FlowinPageRoute.sharedAxis(
+                                      const CheckoutScreen(),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ],
+                          ),
                         ),
                       ],
                     ),
                   ),
-
-                  TextButton(
-                    onPressed: () {},
-                    child: const Text(
-                      'Edit',
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-            const SizedBox(height: 18),
-
-            Container(
-              padding:
-                  const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius:
-                    BorderRadius.circular(
-                  18,
-                ),
-              ),
-              child: Column(
-                children: [
-                  _row(
-                    'Subtotal',
-                    '\$42.50',
-                  ),
-                  _row(
-                    'Delivery Fee',
-                    '\$4.99',
-                  ),
-                  _row(
-                    'Service Tax (5%)',
-                    '\$2.12',
-                  ),
-                  const Divider(),
-                  _row(
-                    'Total Amount',
-                    '\$49.61',
-                    true,
-                  ),
-                ],
-              ),
-            ),
-
-            const SizedBox(height: 24),
-
-            SizedBox(
-              width: double.infinity,
-              height: 58,
-              child: FilledButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) =>
-                          const CheckoutScreen(),
-                    ),
-                  );
-                },
-                child: const Text(
-                  'Proceed to Checkout →',
-                ),
-              ),
-            ),
-
-            const SizedBox(height: 18),
-
-            const Center(
-              child: Text.rich(
-                TextSpan(
-                  children: [
-                    TextSpan(
-                      text:
-                          'Estimated arrival: ',
-                    ),
-                    TextSpan(
-                      text:
-                          'Today, 4 PM - 6 PM',
-                      style: TextStyle(
-                        color:
-                            AppColors
-                                .primary,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-
-            const SizedBox(height: 100),
-          ],
-        ),
-      ),
-    );
-  }
-
-  static Widget _row(
-    String title,
-    String value, [
-    bool total = false,
-  ]) {
-    return Padding(
-      padding:
-          const EdgeInsets.symmetric(
-        vertical: 6,
-      ),
-      child: Row(
-        children: [
-          Text(
-            title,
-            style: TextStyle(
-              fontSize:
-                  total ? 18 : 16,
-              fontWeight: total
-                  ? FontWeight.bold
-                  : FontWeight.normal,
-            ),
-          ),
-          const Spacer(),
-          Text(
-            value,
-            style: TextStyle(
-              fontSize:
-                  total ? 24 : 16,
-              color: total
-                  ? AppColors.primary
-                  : Colors.black,
-              fontWeight: total
-                  ? FontWeight.bold
-                  : FontWeight.normal,
-            ),
           ),
         ],
       ),
+    );
+  }
+}
+
+class _SummaryRow extends StatelessWidget {
+  const _SummaryRow({required this.label, required this.amount});
+
+  final String label;
+  final double amount;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Expanded(
+          child: Text(
+            label,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: FlowinTypography.bodyMedium,
+          ),
+        ),
+        const SizedBox(width: 8),
+        AnimatedPriceText(
+          amount: amount,
+          style: FlowinTypography.titleMedium.copyWith(fontSize: 14),
+        ),
+      ],
     );
   }
 }

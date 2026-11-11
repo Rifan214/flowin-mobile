@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
 
-class SettingsTile extends StatelessWidget {
-  final IconData icon;
-  final String title;
-  final String? subtitle;
-  final String? trailingText;
-  final Widget? trailing;
-  final VoidCallback? onTap;
+import '../core/animations/app_haptics.dart';
+import '../core/design_system/flowin_colors.dart';
+import '../core/design_system/flowin_typography.dart';
 
+class SettingsTile extends StatelessWidget {
   const SettingsTile({
     super.key,
     required this.icon,
@@ -16,72 +13,83 @@ class SettingsTile extends StatelessWidget {
     this.trailingText,
     this.trailing,
     this.onTap,
+    this.iconColor,
   });
+
+  final IconData icon;
+  final String title;
+  final String? subtitle;
+  final String? trailingText;
+  final Widget? trailing;
+  final VoidCallback? onTap;
+  final Color? iconColor;
 
   @override
   Widget build(BuildContext context) {
+    final effectiveColor = iconColor ?? FlowinColors.primary;
     return Material(
       color: Colors.transparent,
       child: InkWell(
-        borderRadius: BorderRadius.circular(14),
-        onTap: onTap,
+        onTap: onTap == null
+            ? null
+            : () {
+                AppHaptics.light();
+                onTap!();
+              },
         child: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 16,
-            vertical: 14,
-          ),
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 13),
           child: Row(
             children: [
-              Icon(
-                icon,
-                size: 24,
-                color: const Color(0xFF5B667A),
+              Container(
+                width: 38,
+                height: 38,
+                decoration: BoxDecoration(
+                  color: effectiveColor.withValues(alpha: 0.11),
+                  borderRadius: BorderRadius.circular(11),
+                ),
+                child: Icon(icon, size: 19, color: effectiveColor),
               ),
-
-              const SizedBox(width: 16),
-
+              const SizedBox(width: 12),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       title,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                      ),
+                      style: FlowinTypography.titleMedium.copyWith(fontSize: 14.5),
                     ),
-
-                    if (subtitle != null)
+                    if (subtitle != null && subtitle!.isNotEmpty)
                       Padding(
                         padding: const EdgeInsets.only(top: 2),
                         child: Text(
                           subtitle!,
-                          style: const TextStyle(
-                            fontSize: 13,
-                            color: Colors.grey,
-                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: FlowinTypography.caption,
                         ),
                       ),
                   ],
                 ),
               ),
-
               if (trailingText != null)
                 Padding(
-                  padding: const EdgeInsets.only(right: 8),
+                  padding: const EdgeInsets.only(right: 6),
                   child: Text(
                     trailingText!,
-                    style: const TextStyle(
-                      color: Colors.grey,
+                    style: FlowinTypography.caption.copyWith(
+                      color: FlowinColors.primary,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
                 ),
-
-              trailing ??
-                  const Icon(
-                    Icons.chevron_right,
-                  ),
+              if (trailing != null)
+                trailing!
+              else
+                const Icon(
+                  Icons.chevron_right_rounded,
+                  color: FlowinColors.inkMuted,
+                  size: 20,
+                ),
             ],
           ),
         ),

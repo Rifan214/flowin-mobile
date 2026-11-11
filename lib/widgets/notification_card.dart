@@ -1,118 +1,96 @@
 import 'package:flutter/material.dart';
 
-import '../core/constants/app_colors.dart';
+import '../core/design_system/flowin_colors.dart';
+import '../core/design_system/flowin_spacing.dart';
+import '../core/design_system/flowin_typography.dart';
 import '../models/notification_model.dart';
 
 class NotificationCard extends StatelessWidget {
-  final NotificationModel notification;
-  final VoidCallback? onTap;
-
   const NotificationCard({
     super.key,
     required this.notification,
     this.onTap,
   });
 
+  final NotificationModel notification;
+  final VoidCallback? onTap;
+
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      borderRadius: BorderRadius.circular(18),
+    final unread = !notification.isRead;
+    return GestureDetector(
       onTap: onTap,
-      child: Container(
-        margin: const EdgeInsets.only(bottom: 14),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 220),
+        margin: const EdgeInsets.only(bottom: 10),
+        padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(18),
+          color: unread ? FlowinColors.cyanTint : FlowinColors.surface,
+          borderRadius: FlowinRadii.card,
+          boxShadow: FlowinShadows.cardSoft,
           border: Border.all(
-            color: Colors.grey.shade300,
+            color: unread
+                ? FlowinColors.primary.withValues(alpha: 0.28)
+                : FlowinColors.border.withValues(alpha: 0.7),
           ),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.03),
-              blurRadius: 8,
-              offset: const Offset(0, 2),
-            ),
-          ],
         ),
         child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-              width: 5,
-              height: 100,
-              decoration: const BoxDecoration(
-                color: AppColors.primary,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(18),
-                  bottomLeft: Radius.circular(18),
-                ),
+              width: 42,
+              height: 42,
+              decoration: BoxDecoration(
+                color: unread ? FlowinColors.primary : FlowinColors.cyanMist,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Icon(
+                notification.icon,
+                size: 20,
+                color: unread ? Colors.white : FlowinColors.primary,
               ),
             ),
-
+            const SizedBox(width: 12),
             Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      width: 52,
-                      height: 52,
-                      decoration: BoxDecoration(
-                        color: const Color(0xffEDF3FF),
-                        shape: BoxShape.circle,
-                      ),
-                      child: Icon(
-                        notification.icon,
-                        color: AppColors.primary,
-                        size: 26,
-                      ),
-                    ),
-
-                    const SizedBox(width: 14),
-
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment:
-                            CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Expanded(
-                                child: Text(
-                                  notification.title,
-                                  style: const TextStyle(
-                                    fontSize: 18,
-                                    fontWeight:
-                                        FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-
-                              Text(
-                                notification.time,
-                                style: const TextStyle(
-                                  color: Colors.grey,
-                                  fontSize: 13,
-                                ),
-                              ),
-                            ],
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          notification.title,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: FlowinTypography.titleMedium.copyWith(
+                            fontSize: 14.5,
                           ),
-
-                          const SizedBox(height: 8),
-
-                          Text(
-                            notification.message,
-                            style: const TextStyle(
-                              color: Colors.black54,
-                              fontSize: 15,
-                              height: 1.5,
-                            ),
-                          ),
-                        ],
+                        ),
                       ),
-                    ),
-                  ],
-                ),
+                      const SizedBox(width: 6),
+                      Text(
+                        notification.time,
+                        style: FlowinTypography.caption.copyWith(fontSize: 11),
+                      ),
+                      if (unread) ...[
+                        const SizedBox(width: 6),
+                        Container(
+                          width: 8,
+                          height: 8,
+                          decoration: const BoxDecoration(
+                            color: FlowinColors.primary,
+                            shape: BoxShape.circle,
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    notification.message,
+                    style: FlowinTypography.bodyMedium.copyWith(fontSize: 13),
+                  ),
+                ],
               ),
             ),
           ],

@@ -1,24 +1,51 @@
 import 'package:flutter/material.dart';
 
-import 'core/theme/app_theme.dart';
-import 'screens/main_navigation_screen.dart';
+import 'core/design_system/flowin_theme.dart';
 import 'screens/onboarding/onboarding_screen.dart';
-import 'screens/profile/payment_methods_screen.dart';
+import 'state/flowin_app_state.dart';
 
 void main() {
   runApp(const FlowinApp());
 }
 
-class FlowinApp extends StatelessWidget {
-  const FlowinApp({super.key});
+class FlowinApp extends StatefulWidget {
+  const FlowinApp({super.key, this.state});
+
+  final FlowinAppState? state;
+
+  @override
+  State<FlowinApp> createState() => _FlowinAppState();
+}
+
+class _FlowinAppState extends State<FlowinApp> {
+  late final FlowinAppState _ownedState;
+
+  FlowinAppState get _effectiveState => widget.state ?? _ownedState;
+
+  @override
+  void initState() {
+    super.initState();
+    _ownedState = FlowinAppState();
+  }
+
+  @override
+  void dispose() {
+    if (widget.state == null) {
+      _ownedState.dispose();
+    }
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Flowin',
-      theme: AppTheme.lightTheme,
-      home: const OnboardingScreen(),
+    return FlowinScope(
+      state: _effectiveState,
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'Flowin',
+        theme: FlowinTheme.light,
+        home: const OnboardingScreen(),
+      ),
     );
   }
 }

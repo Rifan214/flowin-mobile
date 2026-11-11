@@ -1,323 +1,214 @@
 import 'package:flutter/material.dart';
 
+import '../../core/animations/app_haptics.dart';
+import '../../core/animations/flowin_page_routes.dart';
+import '../../core/animations/motion_state_scenes.dart';
+import '../../core/design_system/flowin_colors.dart';
+import '../../core/design_system/flowin_motion.dart';
+import '../../core/design_system/flowin_spacing.dart';
+import '../../core/design_system/flowin_typography.dart';
+import '../../shared/widgets/flowin_button.dart';
+import '../../shared/widgets/flowin_text_field.dart';
+import '../../shared/widgets/flowin_toast.dart';
+import '../../widgets/flowin_header.dart';
 import 'review_success_screen.dart';
-import '../main_navigation_screen.dart';
 
 class RatingReviewScreen extends StatefulWidget {
-  const RatingReviewScreen({
-    super.key,
-  });
+  const RatingReviewScreen({super.key});
 
   @override
-  State<RatingReviewScreen> createState() =>
-      _RatingReviewScreenState();
+  State<RatingReviewScreen> createState() => _RatingReviewScreenState();
 }
 
-class _RatingReviewScreenState
-    extends State<RatingReviewScreen> {
-  int driverRating = 4;
-  int shopRating = 5;
+class _RatingReviewScreenState extends State<RatingReviewScreen> {
+  static const List<String> _tags = [
+    'On-Time Arrival',
+    'Friendly Courier',
+    'Clean Sealed Gallon',
+    'Zero Spills',
+    'Smooth Bottle Swap',
+  ];
+
+  int _rating = 5;
+  final Set<String> _selectedTags = {'On-Time Arrival', 'Clean Sealed Gallon'};
+  final _commentController = TextEditingController();
+
+  @override
+  void dispose() {
+    _commentController.dispose();
+    super.dispose();
+  }
+
+  String get _moodCaption => switch (_rating) {
+        5 => 'Crystal Clear Experience!',
+        4 => 'Great Refreshing Delivery',
+        3 => 'Good, Can Be Faster',
+        2 => 'Needs Attention',
+        _ => 'Tell Us How to Improve',
+      };
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: FlowinColors.background,
       body: SafeArea(
-        child: SingleChildScrollView(
-          padding:
-              const EdgeInsets.all(20),
-          child: Column(
-            children: [
-              Row(
-                children: [
-                  IconButton(
-                    onPressed: () {
-                        Navigator.pushAndRemoveUntil(
+        child: Column(
+          children: [
+            const FlowinHeader(
+              title: 'Rate Delivery',
+              rightIcon: SizedBox(width: 42),
+            ),
+            Expanded(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.fromLTRB(20, 10, 20, 24),
+                child: Column(
+                  children: [
+                    // Interactive Rive-style Mood-Morphing Droplet Companion
+                    HydrationRatingCompanion(rating: _rating, size: 110),
+                    const SizedBox(height: 10),
+                    AnimatedSwitcher(
+                      duration: FlowinMotion.resolve(
                         context,
-                        MaterialPageRoute(
-                            builder: (_) =>
-                                const MainNavigationScreen(),
-                        ),
-                        (route) => false,
-                        );
-                    },
-                    icon: const Icon(Icons.close),
-                    ),
-
-                  const Spacer(),
-
-                  const Text(
-                    'Rate Delivery',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight:
-                          FontWeight.bold,
-                    ),
-                  ),
-
-                  const Spacer(),
-
-                  IconButton(
-                    onPressed: () {},
-                    icon: const Icon(
-                      Icons.help_outline,
-                    ),
-                  ),
-                ],
-              ),
-
-              const SizedBox(height: 20),
-
-              const CircleAvatar(
-                radius: 45,
-                backgroundImage: AssetImage(
-                  'assets/images/driver.jpg',
-                ),
-              ),
-
-              const SizedBox(height: 24),
-
-              const Text(
-                'How was your order?',
-                textAlign:
-                    TextAlign.center,
-                style: TextStyle(
-                  fontSize: 34,
-                  fontWeight:
-                      FontWeight.bold,
-                  color: Color(
-                    0xFF1565C0,
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: 8),
-
-              const Text(
-                'Order #AQ-8829 delivered at 2:14 PM',
-                textAlign:
-                    TextAlign.center,
-                style: TextStyle(
-                  color: Colors.grey,
-                  fontSize: 16,
-                ),
-              ),
-
-              const SizedBox(height: 24),
-
-              _ratingCard(
-                title: 'Rate Driver',
-                badge: 'Marcus',
-                rating: driverRating,
-                onRate: (value) {
-                  setState(() {
-                    driverRating = value;
-                  });
-                },
-                tags: const [
-                  'Fast Delivery',
-                  'Polite Driver',
-                  'Good Handling',
-                ],
-              ),
-
-              const SizedBox(height: 18),
-
-              _ratingCard(
-                title: 'Rate Shop',
-                badge:
-                    'FLowin Central',
-                rating: shopRating,
-                onRate: (value) {
-                  setState(() {
-                    shopRating = value;
-                  });
-                },
-                tags: const [
-                  'Clean Bottle',
-                  'Proper Seal',
-                  'Correct Item',
-                ],
-              ),
-
-              const SizedBox(height: 24),
-
-              const Align(
-                alignment:
-                    Alignment.centerLeft,
-                child: Text(
-                  'Write a comment',
-                  style: TextStyle(
-                    fontSize: 22,
-                    fontWeight:
-                        FontWeight.bold,
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: 12),
-
-              TextField(
-                maxLines: 5,
-                decoration:
-                    InputDecoration(
-                  hintText:
-                      'Share your experience here...',
-                  border:
-                      OutlineInputBorder(
-                    borderRadius:
-                        BorderRadius.circular(
-                      16,
-                    ),
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: 24),
-
-              SizedBox(
-                width:
-                    double.infinity,
-                height: 56,
-                child: FilledButton(
-                  onPressed: () {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) =>
-                            const ReviewSuccessScreen(),
+                        FlowinDurations.fast,
                       ),
-                    );
-                  },
-                  child: const Text(
-                    'Submit Review',
-                  ),
-                ),
-              ),
+                      child: Text(
+                        _moodCaption,
+                        key: ValueKey(_rating),
+                        style: FlowinTypography.headlineMedium,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      'Delivered by Alex Rivera from Flowin Central Depot',
+                      style: FlowinTypography.caption,
+                    ),
+                    const SizedBox(height: 18),
 
-              const SizedBox(height: 20),
+                    // Elastic Animated 5-Star Selector
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 14,
+                      ),
+                      decoration: BoxDecoration(
+                        color: FlowinColors.surface,
+                        borderRadius: FlowinRadii.card,
+                        boxShadow: FlowinShadows.cardSoft,
+                        border: Border.all(color: FlowinColors.border),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: List.generate(5, (i) {
+                          final starValue = i + 1;
+                          final active = starValue <= _rating;
+                          return GestureDetector(
+                            onTap: () {
+                              AppHaptics.selection();
+                              setState(() => _rating = starValue);
+                            },
+                            child: AnimatedScale(
+                              scale: active ? 1.15 : 0.92,
+                              duration: const Duration(milliseconds: 180),
+                              curve: FlowinCurves.spring,
+                              child: Padding(
+                                padding: const EdgeInsets.all(4),
+                                child: Icon(
+                                  active
+                                      ? Icons.star_rounded
+                                      : Icons.star_outline_rounded,
+                                  size: 38,
+                                  color: active
+                                      ? FlowinColors.amber
+                                      : FlowinColors.inkMuted,
+                                ),
+                              ),
+                            ),
+                          );
+                        }),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
 
-              const Text(
-                'Your feedback helps us improve the Flowin experience for everyone.',
-                textAlign:
-                    TextAlign.center,
-                style: TextStyle(
-                  color: Colors.grey,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
+                    // Interactive Toggleable Highlights
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        'What went well?',
+                        style: FlowinTypography.titleMedium,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      children: _tags.map((tag) {
+                        final selected = _selectedTags.contains(tag);
+                        return FilterChip(
+                          label: Text(tag),
+                          selected: selected,
+                          selectedColor: FlowinColors.cyanMist,
+                          checkmarkColor: FlowinColors.primary,
+                          side: BorderSide(
+                            color: selected
+                                ? FlowinColors.primary
+                                : FlowinColors.border,
+                          ),
+                          labelStyle: FlowinTypography.caption.copyWith(
+                            fontWeight: FontWeight.w600,
+                            color: selected
+                                ? FlowinColors.primary
+                                : FlowinColors.ink,
+                          ),
+                          onSelected: (value) {
+                            AppHaptics.selection();
+                            setState(() {
+                              if (value) {
+                                _selectedTags.add(tag);
+                              } else {
+                                _selectedTags.remove(tag);
+                              }
+                            });
+                          },
+                        );
+                      }).toList(),
+                    ),
+                    const SizedBox(height: 20),
 
-  Widget _ratingCard({
-    required String title,
-    required String badge,
-    required int rating,
-    required Function(int)
-        onRate,
-    required List<String> tags,
-  }) {
-    return Container(
-      padding:
-          const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius:
-            BorderRadius.circular(
-          18,
-        ),
-        border: Border.all(
-          color: const Color(
-            0xFFE0E5EF,
-          ),
-        ),
-      ),
-      child: Column(
-        crossAxisAlignment:
-            CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Text(
-                title,
-                style:
-                    const TextStyle(
-                  fontSize: 20,
-                  fontWeight:
-                      FontWeight.bold,
-                ),
-              ),
-
-              const Spacer(),
-
-              Container(
-                padding:
-                    const EdgeInsets.symmetric(
-                  horizontal: 10,
-                  vertical: 5,
-                ),
-                decoration:
-                    BoxDecoration(
-                  color: const Color(
-                    0xFFF4E0D8,
-                  ),
-                  borderRadius:
-                      BorderRadius.circular(
-                    8,
-                  ),
-                ),
-                child: Text(
-                  badge,
-                ),
-              ),
-            ],
-          ),
-
-          const SizedBox(height: 16),
-
-          Row(
-            mainAxisAlignment:
-                MainAxisAlignment.center,
-            children:
-                List.generate(
-              5,
-              (index) =>
-                  IconButton(
-                onPressed: () =>
-                    onRate(
-                  index + 1,
-                ),
-                icon: Icon(
-                  index < rating
-                      ? Icons.star
-                      : Icons.star_border,
-                  color: Colors.orange,
-                  size: 36,
+                    FlowinTextField(
+                      label: 'Additional Notes (Optional)',
+                      hint: 'Share how Alex handled your gallon drop...',
+                      controller: _commentController,
+                      maxLines: 3,
+                    ),
+                  ],
                 ),
               ),
             ),
-          ),
 
-          const SizedBox(height: 12),
-
-          Wrap(
-            spacing: 10,
-            runSpacing: 10,
-            children: tags
-                .map(
-                  (tag) =>
-                      OutlinedButton(
-                    onPressed: () {},
-                    child: Text(
-                      tag,
-                    ),
-                  ),
-                )
-                .toList(),
-          ),
-        ],
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 8, 20, 18),
+              child: FlowinButton(
+                label: 'Submit Review',
+                trailingIcon: Icons.send_rounded,
+                onPressed: () {
+                  if (_rating < 1) {
+                    FlowinToast.show(
+                      context,
+                      title: 'Select a Rating',
+                      message: 'Tap a star rating above before submitting.',
+                      type: FlowinToastType.warning,
+                    );
+                    return;
+                  }
+                  Navigator.pushReplacement(
+                    context,
+                    FlowinPageRoute.fadeScale(const ReviewSuccessScreen()),
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
