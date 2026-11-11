@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import 'core/design_system/flowin_theme.dart';
 import 'screens/onboarding/onboarding_screen.dart';
 import 'state/flowin_app_state.dart';
 
 void main() {
+  GoogleFonts.config.allowRuntimeFetching = false;
   runApp(const FlowinApp());
 }
 
@@ -44,6 +47,14 @@ class _FlowinAppState extends State<FlowinApp> {
         debugShowCheckedModeBanner: false,
         title: 'Flowin',
         theme: FlowinTheme.light,
+        builder: (context, child) {
+          return AnnotatedRegion<SystemUiOverlayStyle>(
+            value: SystemUiOverlayStyle.dark.copyWith(
+              statusBarColor: Colors.transparent,
+            ),
+            child: child ?? const SizedBox.shrink(),
+          );
+        },
         home: const OnboardingScreen(),
       ),
     );

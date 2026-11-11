@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../../core/animations/flowin_page_routes.dart';
 import '../../core/animations/staggered_reveal.dart';
@@ -111,8 +112,12 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: FlowinColors.background,
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemUiOverlayStyle.light.copyWith(
+        statusBarColor: Colors.transparent,
+      ),
+      child: Scaffold(
+        backgroundColor: FlowinColors.background,
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -370,6 +375,7 @@ class _LoginScreenState extends State<LoginScreen> {
             const SizedBox(height: 16),
           ],
         ),
+      ),
       ),
     );
   }

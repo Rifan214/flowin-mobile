@@ -86,7 +86,13 @@ class FlowinAppState extends ChangeNotifier {
         )
         .toList();
     _orders = List<Order>.from(dummyOrders);
-    _notifications = List<NotificationModel>.from(dummyNotifications);
+    _notifications = dummyNotifications
+        .map(
+          (n) => n.copyWith(
+            message: n.message.replaceAll(r'$45.00', 'Rp 45.000'),
+          ),
+        )
+        .toList();
     _subscriptionPlans = dummySubscriptions
         .map(
           (plan) => plan.price < 1000

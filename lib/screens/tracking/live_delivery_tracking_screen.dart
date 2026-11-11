@@ -112,18 +112,18 @@ class _LiveDeliveryTrackingScreenState extends State<LiveDeliveryTrackingScreen>
                     ),
                   ),
                 ),
-                // Soft blue atmosphere gradient masking low-res corner controls cleanly
+                // Soft mist gradient masking map edge labels cleanly
                 Container(
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
                       colors: [
-                        FlowinColors.deepOcean.withValues(alpha: 0.42),
-                        FlowinColors.primary.withValues(alpha: 0.08),
+                        FlowinColors.background.withValues(alpha: 0.88),
+                        FlowinColors.background.withValues(alpha: 0.14),
                         FlowinColors.background,
                       ],
-                      stops: const [0.0, 0.55, 1.0],
+                      stops: const [0.0, 0.42, 1.0],
                     ),
                   ),
                 ),
@@ -213,7 +213,6 @@ class _LiveDeliveryTrackingScreenState extends State<LiveDeliveryTrackingScreen>
                     children: [
                       const FlowinHeader(
                         title: 'Live Tracking',
-                        textColor: Colors.white,
                         rightIcon: SizedBox(width: 42),
                       ),
                       const SizedBox(height: 6),

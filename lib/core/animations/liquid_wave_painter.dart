@@ -65,11 +65,11 @@ class _LiquidWaveBackdropState extends State<LiquidWaveBackdrop>
   @override
   Widget build(BuildContext context) {
     final reduced = FlowinMotion.isReduced(context) || !widget.animate;
-    return RepaintBoundary(
-      child: Stack(
-        fit: StackFit.passthrough,
-        children: [
-          Positioned.fill(
+    return Stack(
+      fit: StackFit.passthrough,
+      children: [
+        Positioned.fill(
+          child: RepaintBoundary(
             child: AnimatedBuilder(
               animation: _controller,
               builder: (context, _) {
@@ -86,9 +86,9 @@ class _LiquidWaveBackdropState extends State<LiquidWaveBackdrop>
               },
             ),
           ),
-          if (widget.child != null) widget.child!,
-        ],
-      ),
+        ),
+        if (widget.child != null) widget.child!,
+      ],
     );
   }
 }

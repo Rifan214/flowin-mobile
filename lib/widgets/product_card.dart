@@ -154,26 +154,28 @@ class _ProductCardState extends State<ProductCard> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 7,
-                          vertical: 3,
-                        ),
-                        decoration: BoxDecoration(
-                          color: FlowinColors.cyanMist,
-                          borderRadius: BorderRadius.circular(6),
-                        ),
-                        child: Text(
-                          widget.product.tag,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: FlowinTypography.overline.copyWith(
-                            fontSize: 9.5,
-                            letterSpacing: 0.4,
+                      if (widget.product.tag.trim().isNotEmpty) ...[
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 7,
+                            vertical: 3,
+                          ),
+                          decoration: BoxDecoration(
+                            color: FlowinColors.cyanMist,
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                          child: Text(
+                            widget.product.tag,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: FlowinTypography.overline.copyWith(
+                              fontSize: 9.5,
+                              letterSpacing: 0.4,
+                            ),
                           ),
                         ),
-                      ),
-                      const SizedBox(height: 6),
+                        const SizedBox(height: 6),
+                      ],
                       Text(
                         widget.product.name,
                         maxLines: 1,

@@ -63,14 +63,14 @@ class ProfileScreen extends StatelessWidget {
       bottom: false,
       child: Column(
         children: [
-          const FlowinHeader(title: 'Profile'),
+          const FlowinHeader(title: 'Profile', showBackButton: false),
           Expanded(
             child: SingleChildScrollView(
               padding: const EdgeInsets.fromLTRB(
                 20,
-                6,
+                4,
                 20,
-                FlowinSpacing.navBarClearance,
+                FlowinSpacing.navBarClearance + 22,
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -88,7 +88,7 @@ class ProfileScreen extends StatelessWidget {
                       },
                     ),
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 12),
 
                   // Quick Account Metrics
                   StaggeredReveal(
@@ -225,7 +225,7 @@ class ProfileScreen extends StatelessWidget {
                       ],
                     ),
                   ),
-                  const SizedBox(height: 22),
+                  const SizedBox(height: 14),
 
                   FlowinButton(
                     label: 'Sign Out',
@@ -293,12 +293,15 @@ class _ProfileStatTile extends StatelessWidget {
                       label,
                       style: FlowinTypography.caption.copyWith(fontSize: 11),
                     ),
-                    Text(
-                      value,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: FlowinTypography.titleMedium.copyWith(
-                        fontSize: 14,
+                    FittedBox(
+                      fit: BoxFit.scaleDown,
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        value,
+                        maxLines: 1,
+                        style: FlowinTypography.titleMedium.copyWith(
+                          fontSize: 14,
+                        ),
                       ),
                     ),
                   ],

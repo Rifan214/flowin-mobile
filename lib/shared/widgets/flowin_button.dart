@@ -21,6 +21,7 @@ class FlowinButton extends StatefulWidget {
     this.isLoading = false,
     this.expand = true,
     this.height = 54,
+    this.horizontalPadding = 20,
     this.borderRadius,
   });
 
@@ -32,6 +33,7 @@ class FlowinButton extends StatefulWidget {
   final bool isLoading;
   final bool expand;
   final double height;
+  final double horizontalPadding;
   final BorderRadius? borderRadius;
 
   @override
@@ -95,7 +97,7 @@ class _FlowinButtonState extends State<FlowinButton> {
     final content = AnimatedContainer(
       duration: FlowinMotion.resolve(context, FlowinDurations.fast),
       height: widget.height,
-      padding: const EdgeInsets.symmetric(horizontal: 20),
+      padding: EdgeInsets.symmetric(horizontal: widget.horizontalPadding),
       decoration: BoxDecoration(
         color: solidBg,
         gradient: gradient,
@@ -123,11 +125,13 @@ class _FlowinButtonState extends State<FlowinButton> {
                     const SizedBox(width: 8),
                   ],
                   Flexible(
-                    child: Text(
-                      widget.label,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: FlowinTypography.button.copyWith(color: fgColor),
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Text(
+                        widget.label,
+                        maxLines: 1,
+                        style: FlowinTypography.button.copyWith(color: fgColor),
+                      ),
                     ),
                   ),
                   if (widget.trailingIcon != null) ...[

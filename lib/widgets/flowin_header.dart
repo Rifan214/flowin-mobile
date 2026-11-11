@@ -21,6 +21,7 @@ class FlowinHeader extends StatelessWidget {
     this.textColor,
     this.actions,
     this.showBrandLogo = false,
+    this.showBackButton,
   });
 
   final String title;
@@ -31,6 +32,7 @@ class FlowinHeader extends StatelessWidget {
   final Color? textColor;
   final List<Widget>? actions;
   final bool showBrandLogo;
+  final bool? showBackButton;
 
   @override
   Widget build(BuildContext context) {
@@ -38,6 +40,7 @@ class FlowinHeader extends StatelessWidget {
         context.dependOnInheritedWidgetOfExactType<FlowinScope>()?.notifier;
     final unreadCount = appState?.unreadNotificationsCount ?? 0;
     final canPop = Navigator.of(context).canPop();
+    final shouldShowBack = showBackButton ?? (canPop && title != 'Flowin');
     final isBrandedHome =
         showBrandLogo || (title == 'Flowin' && leftIcon == null && !canPop);
     final foreground = textColor ?? FlowinColors.ink;
@@ -52,7 +55,7 @@ class FlowinHeader extends StatelessWidget {
               foreground: foreground,
               onTap: onLeftIconPressed ?? () => Navigator.of(context).maybePop(),
             )
-          else if (canPop && title != 'Flowin')
+          else if (shouldShowBack)
             _HeaderCircleAction(
               icon: Icons.arrow_back_ios_new_rounded,
               foreground: foreground,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../../core/animations/app_haptics.dart';
 import '../../core/animations/flowin_page_routes.dart';
@@ -105,8 +106,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     final screenHeight = MediaQuery.sizeOf(context).height;
     final slide = _slides[_currentPage];
 
-    return Scaffold(
-      backgroundColor: FlowinColors.deepOcean,
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemUiOverlayStyle.light.copyWith(
+        statusBarColor: Colors.transparent,
+      ),
+      child: Scaffold(
+        backgroundColor: FlowinColors.deepOcean,
       body: Stack(
         children: [
           // Deep ocean backdrop + live harmonic liquid wave at mid-height
@@ -308,14 +313,15 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                               child: FlowinButton(
                                 label: 'Get Started',
                                 variant: FlowinButtonVariant.tinted,
+                                horizontalPadding: 14,
                                 onPressed: _goToLogin,
                               ),
                             ),
                             const SizedBox(width: 12),
                             Expanded(
-                              flex: 2,
                               child: FlowinButton(
                                 label: 'Continue',
+                                horizontalPadding: 14,
                                 trailingIcon: Icons.arrow_forward_rounded,
                                 onPressed: _handleNextOrGetStarted,
                               ),
@@ -337,6 +343,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             ),
           ),
         ],
+      ),
       ),
     );
   }

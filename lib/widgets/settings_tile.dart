@@ -71,6 +71,8 @@ class SettingsTile extends StatelessWidget {
                   ],
                 ),
               ),
+              if (trailingText != null || trailing != null)
+                const SizedBox(width: 10),
               if (trailingText != null)
                 Padding(
                   padding: const EdgeInsets.only(right: 6),
