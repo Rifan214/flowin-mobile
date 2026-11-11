@@ -14,4 +14,22 @@ class Order {
     required this.totalPrice,
     required this.status,
   });
+
+  Order copyWith({
+    String? storeName,
+    String? item,
+    String? image,
+    int? quantity,
+    int? totalPrice,
+    String? status,
+  }) {
+    return Order(
+      storeName: storeName ?? this.storeName,
+      item: item ?? this.item,
+      image: image ?? this.image,
+      quantity: quantity ?? this.quantity,
+      totalPrice: totalPrice ?? this.totalPrice,
+      status: status ?? this.status,
+    );
+  }
 }

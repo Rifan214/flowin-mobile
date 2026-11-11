@@ -1,23 +1,17 @@
 import 'package:flutter/material.dart';
 
+import '../design_system/flowin_colors.dart';
+
+/// Legacy compatibility bridge delegating to [FlowinColors].
 class AppColors {
-  static const Color primary = Color(0xFF1565D8);
-
-  static const Color secondary = Color(0xFFFFA726);
-
-  static const Color background = Color(0xFFF6F7FB);
-
-  static const Color surface = Colors.white;
-
-  static const Color textPrimary = Color(0xFF202632);
-
-  static const Color textSecondary = Color(0xFF6B7280);
-
-  static const Color border = Color(0xFFE5E7EB);
-
-  static const Color chipSelected = Color(0xFFDDEBFF);
-
-  static const Color bannerBlue = Color(0xFF0D6EFD);
-
-  static const Color success = Color(0xFF10B981);
+  static const Color primary = FlowinColors.primary;
+  static const Color secondary = FlowinColors.amber;
+  static const Color background = FlowinColors.background;
+  static const Color surface = FlowinColors.surface;
+  static const Color textPrimary = FlowinColors.ink;
+  static const Color textSecondary = FlowinColors.inkSecondary;
+  static const Color border = FlowinColors.border;
+  static const Color chipSelected = FlowinColors.cyanMist;
+  static const Color bannerBlue = FlowinColors.primaryBright;
+  static const Color success = FlowinColors.success;
 }

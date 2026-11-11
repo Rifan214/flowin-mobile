@@ -14,4 +14,22 @@ class SubscriptionPlan {
     this.badge = '',
     this.isPopular = false,
   });
+
+  SubscriptionPlan copyWith({
+    String? title,
+    int? price,
+    String? description,
+    List<String>? features,
+    String? badge,
+    bool? isPopular,
+  }) {
+    return SubscriptionPlan(
+      title: title ?? this.title,
+      price: price ?? this.price,
+      description: description ?? this.description,
+      features: features ?? this.features,
+      badge: badge ?? this.badge,
+      isPopular: isPopular ?? this.isPopular,
+    );
+  }
 }

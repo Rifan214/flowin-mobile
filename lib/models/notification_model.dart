@@ -16,4 +16,22 @@ class NotificationModel {
     required this.isToday,
     this.isRead = false,
   });
+
+  NotificationModel copyWith({
+    String? title,
+    String? message,
+    String? time,
+    IconData? icon,
+    bool? isToday,
+    bool? isRead,
+  }) {
+    return NotificationModel(
+      title: title ?? this.title,
+      message: message ?? this.message,
+      time: time ?? this.time,
+      icon: icon ?? this.icon,
+      isToday: isToday ?? this.isToday,
+      isRead: isRead ?? this.isRead,
+    );
+  }
 }

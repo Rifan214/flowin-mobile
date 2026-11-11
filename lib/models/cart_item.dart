@@ -12,4 +12,22 @@ class CartItem {
     required this.price,
     required this.quantity,
   });
+
+  double get lineTotal => price * quantity;
+
+  CartItem copyWith({
+    String? name,
+    String? image,
+    String? description,
+    double? price,
+    int? quantity,
+  }) {
+    return CartItem(
+      name: name ?? this.name,
+      image: image ?? this.image,
+      description: description ?? this.description,
+      price: price ?? this.price,
+      quantity: quantity ?? this.quantity,
+    );
+  }
 }
