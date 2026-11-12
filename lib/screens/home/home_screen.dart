@@ -38,17 +38,17 @@ class HomeScreen extends StatelessWidget {
 
     return SafeArea(
       bottom: false,
-      child: CustomScrollView(
-        slivers: [
-          const SliverToBoxAdapter(
-            child: FlowinHeader(showBrandLogo: true),
-          ),
-
-          // Hero Greeting & Active Delivery Strip
-          SliverPadding(
-            padding: const EdgeInsets.fromLTRB(20, 4, 20, 0),
-            sliver: SliverToBoxAdapter(
-              child: StaggeredReveal(
+      child: Column(
+        children: [
+          const FlowinHeader(showBrandLogo: true, showNotification: true),
+          Expanded(
+            child: CustomScrollView(
+              slivers: [
+                // Hero Greeting & Active Delivery Strip
+                SliverPadding(
+                  padding: const EdgeInsets.fromLTRB(20, 4, 20, 0),
+                  sliver: SliverToBoxAdapter(
+                    child: StaggeredReveal(
                 index: 0,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -309,12 +309,15 @@ class HomeScreen extends StatelessWidget {
               20,
               FlowinSpacing.navBarClearance,
             ),
-            sliver: SliverToBoxAdapter(
-              child: SubscriptionBanner(),
-            ),
+                sliver: SliverToBoxAdapter(
+                  child: SubscriptionBanner(),
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
-    );
+        ),
+      ],
+    ),
+  );
   }
 }

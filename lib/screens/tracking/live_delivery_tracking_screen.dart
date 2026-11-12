@@ -11,6 +11,7 @@ import '../../shared/widgets/flowin_button.dart';
 import '../../shared/widgets/flowin_toast.dart';
 import '../../state/flowin_app_state.dart';
 import '../../widgets/flowin_header.dart';
+import '../main_navigation_screen.dart';
 import '../review/rating_review_screen.dart';
 
 class LiveDeliveryTrackingScreen extends StatefulWidget {
@@ -87,13 +88,30 @@ class _LiveDeliveryTrackingScreenState extends State<LiveDeliveryTrackingScreen>
     );
   }
 
+  void _backToOrders(BuildContext context) {
+    Navigator.pushAndRemoveUntil(
+      context,
+      FlowinPageRoute.fadeScale(
+        const MainNavigationScreen(initialIndex: 1),
+      ),
+      (route) => false,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final appState = FlowinScope.of(context);
     final reduced = FlowinMotion.isReduced(context);
 
-    return Scaffold(
-      backgroundColor: FlowinColors.background,
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, _) {
+        if (!didPop) {
+          _backToOrders(context);
+        }
+      },
+      child: Scaffold(
+        backgroundColor: FlowinColors.background,
       body: Column(
         children: [
           // Top Map & Live Route Canvas
@@ -211,9 +229,11 @@ class _LiveDeliveryTrackingScreenState extends State<LiveDeliveryTrackingScreen>
                   bottom: false,
                   child: Column(
                     children: [
-                      const FlowinHeader(
+                      FlowinHeader(
                         title: 'Live Tracking',
-                        rightIcon: SizedBox(width: 42),
+                        showBackButton: true,
+                        showNotification: false,
+                        onLeftIconPressed: () => _backToOrders(context),
                       ),
                       const SizedBox(height: 6),
                       Container(
@@ -430,6 +450,7 @@ class _LiveDeliveryTrackingScreenState extends State<LiveDeliveryTrackingScreen>
             ),
           ),
         ],
+      ),
       ),
     );
   }

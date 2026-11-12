@@ -11,6 +11,7 @@ import '../../shared/widgets/flowin_button.dart';
 import '../../shared/widgets/flowin_text_field.dart';
 import '../../shared/widgets/flowin_toast.dart';
 import '../../widgets/flowin_header.dart';
+import '../main_navigation_screen.dart';
 import 'review_success_screen.dart';
 
 class RatingReviewScreen extends StatefulWidget {
@@ -47,17 +48,34 @@ class _RatingReviewScreenState extends State<RatingReviewScreen> {
         _ => 'Tell Us How to Improve',
       };
 
+  void _backToHome(BuildContext context) {
+    Navigator.pushAndRemoveUntil(
+      context,
+      FlowinPageRoute.fadeScale(const MainNavigationScreen()),
+      (route) => false,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: FlowinColors.background,
-      body: SafeArea(
-        child: Column(
-          children: [
-            const FlowinHeader(
-              title: 'Rate Delivery',
-              rightIcon: SizedBox(width: 42),
-            ),
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, _) {
+        if (!didPop) {
+          _backToHome(context);
+        }
+      },
+      child: Scaffold(
+        backgroundColor: FlowinColors.background,
+        body: SafeArea(
+          child: Column(
+            children: [
+              FlowinHeader(
+                title: 'Rate Delivery',
+                showBackButton: true,
+                showNotification: false,
+                onLeftIconPressed: () => _backToHome(context),
+              ),
             Expanded(
               child: SingleChildScrollView(
                 padding: const EdgeInsets.fromLTRB(20, 10, 20, 24),
@@ -209,6 +227,7 @@ class _RatingReviewScreenState extends State<RatingReviewScreen> {
             ),
           ],
         ),
+      ),
       ),
     );
   }

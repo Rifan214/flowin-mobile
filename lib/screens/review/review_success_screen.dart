@@ -12,10 +12,25 @@ import '../main_navigation_screen.dart';
 class ReviewSuccessScreen extends StatelessWidget {
   const ReviewSuccessScreen({super.key});
 
+  void _backToHome(BuildContext context) {
+    Navigator.pushAndRemoveUntil(
+      context,
+      FlowinPageRoute.fadeScale(const MainNavigationScreen()),
+      (route) => false,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: FlowinColors.background,
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, _) {
+        if (!didPop) {
+          _backToHome(context);
+        }
+      },
+      child: Scaffold(
+        backgroundColor: FlowinColors.background,
       body: Stack(
         children: [
           Positioned.fill(
@@ -89,21 +104,14 @@ class ReviewSuccessScreen extends StatelessWidget {
                   FlowinButton(
                     label: 'Back to Home',
                     icon: Icons.home_rounded,
-                    onPressed: () {
-                      Navigator.pushAndRemoveUntil(
-                        context,
-                        FlowinPageRoute.fadeScale(
-                          const MainNavigationScreen(),
-                        ),
-                        (route) => false,
-                      );
-                    },
+                    onPressed: () => _backToHome(context),
                   ),
                 ],
               ),
             ),
           ),
         ],
+      ),
       ),
     );
   }

@@ -8,6 +8,7 @@ import '../../core/design_system/flowin_spacing.dart';
 import '../../core/design_system/flowin_typography.dart';
 import '../../models/product.dart';
 import '../../shared/widgets/flowin_button.dart';
+import '../../shared/widgets/flowin_favorite_button.dart';
 import '../../shared/widgets/flowin_toast.dart';
 import '../../shared/widgets/hydration_product_stage.dart';
 import '../../shared/widgets/organic_wave_clipper.dart';
@@ -67,53 +68,27 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                             FlowinHeader(
                               title: 'Product Details',
                               actions: [
-                                Material(
-                                  color: FlowinColors.surface,
-                                  shape: const CircleBorder(),
-                                  child: InkWell(
-                                    customBorder: const CircleBorder(),
-                                    onTap: () {
-                                      AppHaptics.selection();
-                                      final added = appState.toggleFavorite(
-                                        widget.product.name,
-                                      );
-                                      FlowinToast.show(
-                                        context,
-                                        title: added
-                                            ? 'Saved to Favorites'
-                                            : 'Removed from Favorites',
-                                        message: widget.product.name,
-                                        type: FlowinToastType.info,
-                                      );
-                                    },
-                                    child: Container(
-                                      width: 42,
-                                      height: 42,
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        border: Border.all(
-                                          color: FlowinColors.border,
-                                        ),
-                                        boxShadow: FlowinShadows.cardSoft,
-                                      ),
-                                      child: AnimatedSwitcher(
-                                        duration:
-                                            const Duration(milliseconds: 220),
-                                        transitionBuilder: (c, a) =>
-                                            ScaleTransition(scale: a, child: c),
-                                        child: Icon(
-                                          isFav
-                                              ? Icons.favorite_rounded
-                                              : Icons.favorite_border_rounded,
-                                          key: ValueKey(isFav),
-                                          size: 20,
-                                          color: isFav
-                                              ? FlowinColors.danger
-                                              : FlowinColors.ink,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
+                                FlowinFavoriteButton(
+                                  isFavorite: isFav,
+                                  size: 42,
+                                  iconSize: 20,
+                                  backgroundColor: FlowinColors.surface,
+                                  borderColor: FlowinColors.border,
+                                  boxShadow: FlowinShadows.cardSoft,
+                                  inactiveColor: FlowinColors.ink,
+                                  onPressed: () {
+                                    final added = appState.toggleFavorite(
+                                      widget.product.name,
+                                    );
+                                    FlowinToast.show(
+                                      context,
+                                      title: added
+                                          ? 'Saved to Favorites'
+                                          : 'Removed from Favorites',
+                                      message: widget.product.name,
+                                      type: FlowinToastType.info,
+                                    );
+                                  },
                                 ),
                               ],
                             ),

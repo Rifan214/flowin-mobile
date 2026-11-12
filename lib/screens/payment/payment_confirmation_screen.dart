@@ -166,7 +166,7 @@ class PaymentConfirmationScreen extends StatelessWidget {
                     label: 'Track My Delivery',
                     icon: Icons.near_me_rounded,
                     onPressed: () {
-                      Navigator.push(
+                      Navigator.pushReplacement(
                         context,
                         FlowinPageRoute.modalSlide(
                           const LiveDeliveryTrackingScreen(),

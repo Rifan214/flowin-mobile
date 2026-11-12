@@ -6,6 +6,7 @@ import '../core/design_system/flowin_motion.dart';
 import '../core/design_system/flowin_spacing.dart';
 import '../core/design_system/flowin_typography.dart';
 import '../models/product.dart';
+import '../shared/widgets/flowin_favorite_button.dart';
 import '../shared/widgets/flowin_toast.dart';
 import '../shared/widgets/hydration_product_stage.dart';
 import '../state/flowin_app_state.dart';
@@ -100,46 +101,24 @@ class _ProductCardState extends State<ProductCard> {
                     Positioned(
                       top: 14,
                       right: 14,
-                      child: Material(
-                        color: Colors.white.withValues(alpha: 0.92),
-                        shape: const CircleBorder(),
-                        child: InkWell(
-                          customBorder: const CircleBorder(),
-                          onTap: () {
-                            if (appState == null) return;
-                            AppHaptics.selection();
-                            final added =
-                                appState.toggleFavorite(widget.product.name);
-                            FlowinToast.show(
-                              context,
-                              title: added
-                                  ? 'Saved to Favorites'
-                                  : 'Removed from Favorites',
-                              message: widget.product.name,
-                              type: FlowinToastType.info,
-                              duration: const Duration(milliseconds: 1600),
-                            );
-                          },
-                          child: SizedBox(
-                            width: 30,
-                            height: 30,
-                            child: AnimatedSwitcher(
-                              duration: const Duration(milliseconds: 200),
-                              transitionBuilder: (child, anim) =>
-                                  ScaleTransition(scale: anim, child: child),
-                              child: Icon(
-                                isFav
-                                    ? Icons.favorite_rounded
-                                    : Icons.favorite_border_rounded,
-                                key: ValueKey(isFav),
-                                size: 16,
-                                color: isFav
-                                    ? FlowinColors.danger
-                                    : FlowinColors.inkSecondary,
-                              ),
-                            ),
-                          ),
-                        ),
+                      child: FlowinFavoriteButton(
+                        isFavorite: isFav,
+                        size: 30,
+                        iconSize: 16,
+                        onPressed: () {
+                          if (appState == null) return;
+                          final added =
+                              appState.toggleFavorite(widget.product.name);
+                          FlowinToast.show(
+                            context,
+                            title: added
+                                ? 'Saved to Favorites'
+                                : 'Removed from Favorites',
+                            message: widget.product.name,
+                            type: FlowinToastType.info,
+                            duration: const Duration(milliseconds: 1600),
+                          );
+                        },
                       ),
                     ),
                   ],

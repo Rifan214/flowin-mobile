@@ -31,7 +31,11 @@ class OrdersScreen extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const FlowinHeader(title: 'Orders', showBackButton: false),
+          const FlowinHeader(
+            title: 'Orders',
+            showBackButton: false,
+            showNotification: true,
+          ),
           Padding(
             padding: const EdgeInsets.fromLTRB(20, 4, 20, 14),
             child: Column(

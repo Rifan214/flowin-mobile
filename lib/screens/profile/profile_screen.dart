@@ -63,7 +63,11 @@ class ProfileScreen extends StatelessWidget {
       bottom: false,
       child: Column(
         children: [
-          const FlowinHeader(title: 'Profile', showBackButton: false),
+          const FlowinHeader(
+            title: 'Profile',
+            showBackButton: false,
+            showNotification: true,
+          ),
           Expanded(
             child: SingleChildScrollView(
               padding: const EdgeInsets.fromLTRB(

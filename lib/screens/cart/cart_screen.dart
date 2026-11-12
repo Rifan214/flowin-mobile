@@ -8,6 +8,7 @@ import '../../core/design_system/flowin_spacing.dart';
 import '../../core/design_system/flowin_typography.dart';
 import '../../shared/widgets/animated_price_text.dart';
 import '../../shared/widgets/flowin_button.dart';
+import '../../shared/widgets/flowin_confirm_dialog.dart';
 import '../../shared/widgets/flowin_toast.dart';
 import '../../state/flowin_app_state.dart';
 import '../../widgets/cart_item_card.dart';
@@ -23,6 +24,31 @@ class CartScreen extends StatelessWidget {
     DeliveryAddressEditorSheet.show(context);
   }
 
+  Future<void> _confirmClearCart(
+    BuildContext context,
+    FlowinAppState appState,
+  ) async {
+    if (appState.cartItems.isEmpty) return;
+    final confirmed = await showFlowinConfirmDialog(
+      context,
+      title: 'Clear Shopping Cart?',
+      description:
+          'Are you sure you want to remove all items from your cart? This action cannot be undone.',
+      cancelLabel: 'Cancel',
+      confirmLabel: 'Clear Cart',
+      isDestructive: true,
+      icon: Icons.remove_shopping_cart_rounded,
+    );
+    if (confirmed != true || !context.mounted) return;
+    appState.clearCart();
+    FlowinToast.show(
+      context,
+      title: 'Cart Cleared',
+      message: 'Your hydration basket is now empty.',
+      type: FlowinToastType.info,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final appState = FlowinScope.of(context);
@@ -32,31 +58,10 @@ class CartScreen extends StatelessWidget {
       bottom: false,
       child: Column(
         children: [
-          FlowinHeader(
+          const FlowinHeader(
             title: 'My Cart',
-            actions: [
-              if (items.isNotEmpty)
-                TextButton(
-                  onPressed: () {
-                    appState.clearCart();
-                    FlowinToast.show(
-                      context,
-                      title: 'Cart Cleared',
-                      message: 'Your hydration basket is now empty.',
-                      type: FlowinToastType.info,
-                    );
-                  },
-                  child: Text(
-                    'Clear',
-                    style: FlowinTypography.caption.copyWith(
-                      color: FlowinColors.danger,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                )
-              else
-                const SizedBox(width: 42),
-            ],
+            showBackButton: false,
+            showNotification: true,
           ),
 
           Expanded(
@@ -169,6 +174,49 @@ class CartScreen extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(height: 16),
+
+                        // Cart Items Header + In-Content Clear Action
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              child: Text(
+                                'Basket Items (${appState.cartItemCount})',
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: FlowinTypography.titleMedium,
+                              ),
+                            ),
+                            if (items.isNotEmpty)
+                              TextButton.icon(
+                                onPressed: () =>
+                                    _confirmClearCart(context, appState),
+                                style: TextButton.styleFrom(
+                                  foregroundColor: FlowinColors.danger,
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 10,
+                                    vertical: 6,
+                                  ),
+                                  minimumSize: Size.zero,
+                                  tapTargetSize:
+                                      MaterialTapTargetSize.shrinkWrap,
+                                  shape: const StadiumBorder(),
+                                ),
+                                icon: const Icon(
+                                  Icons.delete_sweep_rounded,
+                                  size: 17,
+                                ),
+                                label: Text(
+                                  'Clear',
+                                  style: FlowinTypography.caption.copyWith(
+                                    color: FlowinColors.danger,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                              ),
+                          ],
+                        ),
+                        const SizedBox(height: 10),
 
                         // Swipeable Cart Items
                         ...List.generate(items.length, (index) {

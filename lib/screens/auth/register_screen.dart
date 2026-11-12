@@ -97,7 +97,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           children: [
             const FlowinHeader(
               title: 'Create Account',
-              rightIcon: Icon(Icons.help_outline_rounded),
+              showNotification: false,
             ),
             Expanded(
               child: SingleChildScrollView(

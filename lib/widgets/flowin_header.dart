@@ -9,11 +9,14 @@ import '../screens/notification/notification_screen.dart';
 import '../state/flowin_app_state.dart';
 
 /// Unified modern header shared across Flowin's primary tabs and sub-screens.
-/// Preserves legacy [leftIcon]/[rightIcon] widget parameters for smooth migration.
+/// Supports declarative [showNotification], [showBackButton], [leading],
+/// [actions], and [notificationCount] configuration without leaving empty
+/// spacer boxes when trailing actions are disabled.
 class FlowinHeader extends StatelessWidget {
   const FlowinHeader({
     super.key,
     this.title = 'Flowin',
+    this.leading,
     this.leftIcon,
     this.rightIcon,
     this.onLeftIconPressed,
@@ -22,9 +25,12 @@ class FlowinHeader extends StatelessWidget {
     this.actions,
     this.showBrandLogo = false,
     this.showBackButton,
+    this.showNotification = true,
+    this.notificationCount,
   });
 
   final String title;
+  final Widget? leading;
   final Widget? leftIcon;
   final Widget? rightIcon;
   final VoidCallback? onLeftIconPressed;
@@ -33,85 +39,104 @@ class FlowinHeader extends StatelessWidget {
   final List<Widget>? actions;
   final bool showBrandLogo;
   final bool? showBackButton;
+  final bool showNotification;
+  final int? notificationCount;
 
   @override
   Widget build(BuildContext context) {
     final appState =
         context.dependOnInheritedWidgetOfExactType<FlowinScope>()?.notifier;
-    final unreadCount = appState?.unreadNotificationsCount ?? 0;
+    final unreadCount =
+        notificationCount ?? (appState?.unreadNotificationsCount ?? 0);
     final canPop = Navigator.of(context).canPop();
     final shouldShowBack = showBackButton ?? (canPop && title != 'Flowin');
     final isBrandedHome =
         showBrandLogo || (title == 'Flowin' && leftIcon == null && !canPop);
     final foreground = textColor ?? FlowinColors.ink;
 
+    Widget? leadingWidget;
+    if (leading != null) {
+      leadingWidget = leading;
+    } else if (leftIcon != null && leftIcon is! SizedBox) {
+      leadingWidget = _HeaderCircleWidgetAction(
+        iconWidget: leftIcon!,
+        foreground: foreground,
+        onTap: onLeftIconPressed ?? () => Navigator.of(context).maybePop(),
+      );
+    } else if (leftIcon == null && shouldShowBack) {
+      leadingWidget = _HeaderCircleAction(
+        icon: Icons.arrow_back_ios_new_rounded,
+        foreground: foreground,
+        onTap: onLeftIconPressed ?? () => Navigator.of(context).maybePop(),
+      );
+    }
+
+    Widget? trailingWidget;
+    if (actions != null) {
+      if (actions!.length == 1) {
+        trailingWidget = actions!.first;
+      } else if (actions!.length > 1) {
+        trailingWidget = Row(mainAxisSize: MainAxisSize.min, children: actions!);
+      }
+    } else if (!showNotification || rightIcon is SizedBox) {
+      trailingWidget = null;
+    } else if (rightIcon != null) {
+      trailingWidget = _HeaderCircleWidgetAction(
+        iconWidget: rightIcon!,
+        foreground: foreground,
+        onTap: onRightIconPressed ??
+            () {
+              Navigator.push(
+                context,
+                FlowinPageRoute.sharedAxis(const NotificationScreen()),
+              );
+            },
+      );
+    } else {
+      trailingWidget = _HeaderCircleAction(
+        icon: Icons.notifications_none_rounded,
+        foreground: foreground,
+        badgeCount: unreadCount,
+        onTap: onRightIconPressed ??
+            () {
+              Navigator.push(
+                context,
+                FlowinPageRoute.sharedAxis(const NotificationScreen()),
+              );
+            },
+      );
+    }
+
+    final useBrandHeader = isBrandedHome && leadingWidget == null;
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      child: Row(
-        children: [
-          if (leftIcon != null)
-            _HeaderCircleWidgetAction(
-              iconWidget: leftIcon!,
-              foreground: foreground,
-              onTap: onLeftIconPressed ?? () => Navigator.of(context).maybePop(),
-            )
-          else if (shouldShowBack)
-            _HeaderCircleAction(
-              icon: Icons.arrow_back_ios_new_rounded,
-              foreground: foreground,
-              onTap: onLeftIconPressed ?? () => Navigator.of(context).maybePop(),
-            )
-          else if (isBrandedHome)
-            _BrandWordmark(foreground: foreground)
-          else
-            const SizedBox(width: 42),
-
-          if (!isBrandedHome || (leftIcon != null || canPop))
-            Expanded(
-              child: Text(
-                title,
-                textAlign: TextAlign.center,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: FlowinTypography.titleLarge.copyWith(
-                  color: foreground,
-                  fontWeight: FontWeight.w700,
+      child: SizedBox(
+        height: 44,
+        child: useBrandHeader
+            ? Row(
+                children: [
+                  _BrandWordmark(foreground: foreground),
+                  const Spacer(),
+                  ?trailingWidget,
+                ],
+              )
+            : NavigationToolbar(
+                centerMiddle: true,
+                middleSpacing: 12,
+                leading: leadingWidget,
+                middle: Text(
+                  title,
+                  textAlign: TextAlign.center,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: FlowinTypography.titleLarge.copyWith(
+                    color: foreground,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
+                trailing: trailingWidget,
               ),
-            )
-          else
-            const Spacer(),
-
-          if (actions != null)
-            ...actions!
-          else if (rightIcon is SizedBox)
-            const SizedBox(width: 42)
-          else if (rightIcon != null)
-            _HeaderCircleWidgetAction(
-              iconWidget: rightIcon!,
-              foreground: foreground,
-              onTap: onRightIconPressed ??
-                  () {
-                    Navigator.push(
-                      context,
-                      FlowinPageRoute.sharedAxis(const NotificationScreen()),
-                    );
-                  },
-            )
-          else
-            _HeaderCircleAction(
-              icon: Icons.notifications_none_rounded,
-              foreground: foreground,
-              badgeCount: unreadCount,
-              onTap: onRightIconPressed ??
-                  () {
-                    Navigator.push(
-                      context,
-                      FlowinPageRoute.sharedAxis(const NotificationScreen()),
-                    );
-                  },
-            ),
-        ],
       ),
     );
   }

@@ -39,7 +39,7 @@ class CheckoutScreen extends StatelessWidget {
           children: [
             const FlowinHeader(
               title: 'Checkout',
-              rightIcon: Icon(Icons.lock_outline_rounded),
+              showNotification: false,
             ),
             Expanded(
               child: SingleChildScrollView(
